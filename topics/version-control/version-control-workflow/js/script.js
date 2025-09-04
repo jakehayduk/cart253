@@ -53,6 +53,20 @@ function draw() {
         pop();
     }
 
+    push();
+
+    fill(170, 60, 60);
+
+    triangle(500, 750, 750, 250, 250, 250);
+
+    push();
+    
+    noStroke();
+
+    fill(30, 115, 30);
+
+    ellipse(width / 2, height / 2, 100);
+
     // Draw a red circle at the position of the mouse
     push();
     // No line around the shape
