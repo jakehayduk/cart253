@@ -33,7 +33,14 @@ function setup() {
  */
 function draw() {
   background(160, 180, 200);
-  
+
+  // Make Mr. Furious turn a little more red every frame
+
+  if (mrFurious.fill.g > 20) {
+    mrFurious.fill.g --;
+    mrFurious.fill.b --;
+  }
+
   // Draw Mr. Furious as a coloured circle
   push();
   noStroke();
