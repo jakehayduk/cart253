@@ -21,6 +21,14 @@ let mrFurious = {
   }
 };
 
+let sky = {
+    fill: {
+        r: 160,
+        g: 180,
+        b: 200,
+    }
+}
+
 /**
  * Create the canvas
  */
@@ -32,19 +40,22 @@ function setup() {
  * Draw (and update) Mr. Furious
  */
 function draw() {
-  background(160, 180, 200);
+    sky.fill.r --;
+    sky.fill.g --;
+    sky.fill.b --;
+    background(sky.fill.r, sky.fill.g, sky.fill.b);
 
-  // Make Mr. Furious turn a little more red every frame
+    // Make Mr. Furious turn a little more red every frame (with a constraint)
 
-  if (mrFurious.fill.g > 20) {
-    mrFurious.fill.g --;
-    mrFurious.fill.b --;
-  }
+    if (mrFurious.fill.g > 20) {
+        mrFurious.fill.g --;
+        mrFurious.fill.b --;
+    }
 
-  // Draw Mr. Furious as a coloured circle
-  push();
-  noStroke();
-  fill(mrFurious.fill.r, mrFurious.fill.g, mrFurious.fill.b);
-  ellipse(mrFurious.x, mrFurious.y, mrFurious.size);
-  pop();
+    // Draw Mr. Furious as a coloured circle
+    push();
+    noStroke();
+    fill(mrFurious.fill.r, mrFurious.fill.g, mrFurious.fill.b);
+    ellipse(mrFurious.x, mrFurious.y, mrFurious.size);
+    pop();
 }
