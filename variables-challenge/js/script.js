@@ -29,6 +29,11 @@ let sky = {
     }
 }
 
+let bird = {
+    x: -10,
+    y: 200,
+}
+
 /**
  * Create the canvas
  */
@@ -57,5 +62,17 @@ function draw() {
     noStroke();
     fill(mrFurious.fill.r, mrFurious.fill.g, mrFurious.fill.b);
     ellipse(mrFurious.x, mrFurious.y, mrFurious.size);
+    pop();
+
+    // Move the bird
+
+    bird.x = bird.x + 3;
+
+    // Draw the bird as a triangle
+
+    push();
+    noStroke();
+    triangle(bird.x, bird.y - 10, bird.x, bird.y + 10, bird.x + 10, bird.y);
+    fill(100, 230, 100);
     pop();
 }
