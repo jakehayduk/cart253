@@ -13,12 +13,13 @@ let mrFurious = {
   x: 200,
   y: 200,
   size: 100,
+  shake: 0,
   // Colour
   fill: {
     r: 255,
     g: 225,
     b: 225
-  }
+  },
 };
 
 let sky = {
@@ -56,6 +57,17 @@ function draw() {
         mrFurious.fill.g --;
         mrFurious.fill.b --;
     }
+
+    // Mr. Furious shake increase
+
+    if (mrFurious.shake < 15) {
+        mrFurious.shake = mrFurious.shake + 0.1;
+    }
+
+    // Make Mr. Furious SHAKEE
+
+    mrFurious.x = Math.floor(Math.random() * ((200 + mrFurious.shake) - (200 - mrFurious.shake) + 1)) + (200 - mrFurious.shake);
+    mrFurious.y = Math.floor(Math.random() * ((200 + mrFurious.shake) - (200 - mrFurious.shake) + 1)) + (200 - mrFurious.shake);
 
     // Draw Mr. Furious as a coloured circle
     push();
