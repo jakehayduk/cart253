@@ -1,6 +1,7 @@
 /**
  * Circle Master
  * Pippin Barr
+ * Jake Hayduk
  *
  * This will be a program in which the user can push a circle
  * on the canvas using their own circle.
@@ -39,6 +40,7 @@ function draw() {
   // Draw the user and puck
   drawUser();
   drawPuck();
+  movePuck();
 }
 
 /**
@@ -69,4 +71,13 @@ function drawPuck() {
   fill(puck.fill);
   ellipse(puck.x, puck.y, puck.size);
   pop();
+}
+
+function movePuck() {
+  // Calculate distance to check for overlap
+  let d = dist(user.x, user.y, puck.x, puck.y);
+  let overlap = (d < user.size/2 + puck.size/2);
+  if (overlap) {
+    console.log('overlap');
+  }
 }
