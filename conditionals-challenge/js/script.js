@@ -10,6 +10,8 @@
 const puck = {
   x: 200,
   y: 200,
+  x2: 200,
+  y2: 200,
   size: 100,
   fill: "#ff0000"
 };
@@ -17,6 +19,10 @@ const puck = {
 const user = {
   x: undefined, // will be mouseX
   y: undefined, // will be mouseY
+  x2: undefined,
+  y2: undefined,
+  vx: 0, // x velocity
+  vy: 0, // y velocity
   size: 75,
   fill: "#000000"
 };
@@ -25,7 +31,7 @@ const user = {
  * Create the canvas
  */
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(1000, 1000);
 }
 
 /**
@@ -49,6 +55,12 @@ function draw() {
 function moveUser() {
   user.x = mouseX;
   user.y = mouseY;
+  // the absolute difference between the current and last mouse position to find the x and y velocities
+  user.vx = Math.abs(user.x - user.x2);
+  user.vy = Math.abs(user.y - user.y2);
+  // update the last position to the current one
+  user.x2 = mouseX;
+  user.y2 = mouseY;
 }
 
 /**
@@ -69,7 +81,10 @@ function drawPuck() {
   push();
   noStroke();
   fill(puck.fill);
-  ellipse(puck.x, puck.y, puck.size);
+  // lerp the puck between the bumped positions for smooth motion
+  puck.x2 = lerp(puck.x2, puck.x, 0.1);
+  puck.y2 = lerp(puck.y2, puck.y, 0.1);
+  ellipse(puck.x2, puck.y2, puck.size);
   pop();
 }
 
@@ -78,6 +93,13 @@ function movePuck() {
   let d = dist(user.x, user.y, puck.x, puck.y);
   let overlap = (d < user.size/2 + puck.size/2);
   if (overlap) {
-    console.log('overlap');
+    bump();
   }
+
+}
+
+// Bumps the puck to the new location based on the user's mouse position relative to the puck and multiplies the displacement by the mouse velocities
+function bump() {
+  puck.x = puck.x + ((user.x - puck.x) * -1) * (user.vx / 7);
+  puck.y = puck.y + ((user.y - puck.y) * -1) * (user.vy / 7);
 }
