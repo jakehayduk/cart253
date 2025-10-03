@@ -10,8 +10,9 @@
 
 const jake = {
     // Displacement variables
-    x: 0,
-    y: 0
+    x: 250,
+    y: 250,
+    rotate: 0
 };
 
 /**
@@ -28,24 +29,20 @@ function setup() {
 function draw() {
     background(230, 230, 230);
 
+    jake.x = mouseX;
+    jake.y = mouseY;
+    
+    // angleMode(DEGREES);
+
     if (keyIsDown(LEFT_ARROW)) {
-        jake.x = jake.x - 5;
+        jake.rotate --;
     }
 
     if (keyIsDown(RIGHT_ARROW)) {
-        jake.x = jake.x + 5;
+        jake.rotate ++;
     }
-
-    if (keyIsDown(UP_ARROW)) {
-        jake.y = jake.y - 5;
-    }
-
-    if (keyIsDown(DOWN_ARROW)) {
-        jake.y = jake.y + 5;
-    }
-
-    angleMode(DEGREES);
-    rotate(mouseX/20 - mouseY/20);
+    translate(-250, -250);
+    rotate(radians(jake.rotate));
 
     drawBody();
     
