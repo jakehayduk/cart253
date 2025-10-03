@@ -2,8 +2,7 @@
  * Art Jam Portrait
  * Jake Hayduk
  * 
- * HOW EMBARRASSING! I HAVE NO DESCRIPTION OF MY PROJECT!
- * PLEASE REMOVE A GRADE FROM MY WORK IF IT'S GRADED!
+ * Move the Jake around with your mouse and use the arrow keys to rotate him
  */
 
 "use strict";
@@ -24,15 +23,17 @@ function setup() {
 
 
 /**
- * OOPS I DIDN'T DESCRIBE WHAT MY DRAW DOES!
+ * Draw the Jake, move the Jake, rotate the Jake
 */
 function draw() {
     background(230, 230, 230);
 
+    // Jake follows the mouse
+
     jake.x = mouseX;
     jake.y = mouseY;
     
-    // angleMode(DEGREES);
+    // Arrow keys to rotate
 
     if (keyIsDown(LEFT_ARROW)) {
         jake.rotate --;
@@ -41,11 +42,13 @@ function draw() {
     if (keyIsDown(RIGHT_ARROW)) {
         jake.rotate ++;
     }
+
+    // Rotate Jake
+
     translate(-250, -250);
     rotate(radians(jake.rotate));
 
     drawBody();
-    
 }
 
 function drawBody() {
