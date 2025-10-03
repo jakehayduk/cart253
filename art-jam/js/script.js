@@ -9,15 +9,16 @@
 "use strict";
 
 const jake = {
-  x: undefined, // will be mouseX
-  y: undefined // will be mouseY
+    // Displacement variables
+    x: 0,
+    y: 0
 };
 
 /**
  * Create the canvas
 */
 function setup() {
-    createCanvas(500, 500);
+    createCanvas(1000, 1000);
 }
 
 
@@ -27,7 +28,27 @@ function setup() {
 function draw() {
     background(230, 230, 230);
 
+    if (keyIsDown(LEFT_ARROW)) {
+        jake.x = jake.x - 5;
+    }
+
+    if (keyIsDown(RIGHT_ARROW)) {
+        jake.x = jake.x + 5;
+    }
+
+    if (keyIsDown(UP_ARROW)) {
+        jake.y = jake.y - 5;
+    }
+
+    if (keyIsDown(DOWN_ARROW)) {
+        jake.y = jake.y + 5;
+    }
+
+    angleMode(DEGREES);
+    rotate(mouseX/20 - mouseY/20);
+
     drawBody();
+    
 }
 
 function drawBody() {
@@ -36,122 +57,118 @@ function drawBody() {
     push();
     noStroke();
     fill(245, 215, 205);
-    rect(244, 145, 12, 30, 10);
+    rect(244 + jake.x, 145 + jake.y, 12, 30);
     pop();
 
     // Head
     push();
     noStroke();
     fill(250, 220, 210);
-    rect(230, 100, 40, 60, 30);
+    rect(230 + jake.x, 100 + jake.y, 40, 60);
     pop();
 
     // Hair
     push();
     noStroke();
     fill(170, 120, 120);
-    rect(230, 100, 40, 20, 20);
+    rect(230 + jake.x, 100 + jake.y, 40, 20);
     pop();
 
     // Right eye
     push();
     noStroke();
     fill(255, 255, 255);
-    ellipse(242, 130, 10);
+    ellipse(242 + jake.x, 130 + jake.y, 10);
     pop();
 
     // Left eye
     push();
     noStroke();
     fill(255, 255, 255);
-    ellipse(258, 130, 10);
+    ellipse(258 + jake.x, 130 + jake.y, 10);
     pop();
 
     // Right pupil
     push();
     noStroke();
     fill(25, 5, 0);
-    ellipse(242, 130, 6);
+    ellipse(242 + jake.x, 130 + jake.y, 6);
     pop();
 
     // Left pupil
     push();
     noStroke();
     fill(25, 5, 0);
-    ellipse(258, 130, 6);
+    ellipse(258 + jake.x, 130 + jake.y, 6);
     pop();
 
     // Mouth
     push();
     noStroke();
     fill(40, 10, 10);
-    rect(244, 145, 12, 3, 10);
+    rect(244 + jake.x, 145 + jake.y, 12, 3);
     pop();
 
     // Right Leg
     push();
     noStroke();
     fill(120, 120, 120);
-    rect(225, 250, 20, 120, 20);
+    rect(225 + jake.x, 250 + jake.y, 20, 120);
     pop();
 
     // Left Leg
     push();
     noStroke();
     fill(120, 120, 120);
-    rect(255, 250, 20, 120, 20);
+    rect(255 + jake.x, 250 + jake.y, 20, 120);
     pop();
 
     // Torso
     push();
     noStroke();
     fill(30, 30, 30);
-    rect(220, 170, 60, 100, 20);
+    rect(220 + jake.x, 170 + jake.y, 60, 100);
     pop();
 
     // Right Foot
     push();
     noStroke();
     fill(30, 30, 30);
-    rect(215, 350, 30, 20, 20);
+    rect(215 + jake.x, 350 + jake.y, 30, 20);
     pop();
 
     // Left Foot
     push();
     noStroke();
     fill(30, 30, 30);
-    rect(255, 350, 30, 20, 20);
+    rect(255 + jake.x, 350 + jake.y, 30, 20);
     pop();
 
     // Right Arm
     push();
     noStroke();
     fill(30, 30, 30);
-    angleMode(DEGREES);
-    rotate(20);
-    rect(260, 90, 20, 80, 20);
+    quad(210 + jake.x, 170 + jake.y, 230 + jake.x, 170 + jake.y, 210 + jake.x, 250 + jake.y, 190 + jake.x, 250 + jake.y);
     pop();
 
     // Left Arm
     push();
     noStroke();
     fill(30, 30, 30);
-    angleMode(DEGREES);
-    rotate(-20);
-    rect(190, 260, 20, 80, 20);
+    quad(270 + jake.x, 170 + jake.y, 290 + jake.x, 170 + jake.y, 310 + jake.x, 250 + jake.y, 290 + jake.x, 250 + jake.y);
     pop();
 
-    // Right eye
+    // Right hand
     push();
     noStroke();
     fill(250, 220, 210);
-    ellipse(195, 250, 20);
+    ellipse(195 + jake.x, 250 + jake.y, 20);
     pop();
 
-    // Left eye
+    // Left hand
     push();
     noStroke();
     fill(250, 220, 210);
-    ellipse(305, 250, 20);
+    ellipse(305 + jake.x, 250 + jake.y, 20);
     pop();
 }
