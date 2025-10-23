@@ -76,7 +76,9 @@ function moveFly() {
     fly.x = width * noise(0.005 * frameCount);
     fly.y = height * noise(0.005 * frameCount + 10000);
 
-    console.log('x: ' + fly.x + '\ny: ' + fly.y)
+    // FLY IS NOT MOVING WHEN EATEN BECAUSE IT CAN'T BE RESET BUT JUST MAKE IT DISAPPEAR INSTEAD
+
+    // console.log('x: ' + fly.x + '\ny: ' + fly.y)
     // Handle the fly going off the canvas
     if (fly.x > width) {
         resetFly();
