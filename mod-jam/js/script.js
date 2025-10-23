@@ -37,10 +37,11 @@ const frog = {
 // Our fly
 // Has a position, size, and speed of horizontal movement
 const fly = {
-    x: 0,
-    y: 200, // Will be random
+    x: 320,
+    y: 240, // Will be random
     size: 7,
-    speed: 3
+    speedX: 0,
+    speedY: 0
 };
 
 /**
@@ -50,7 +51,7 @@ function setup() {
     createCanvas(640, 480);
 
     // Give the fly its first random position
-    resetFly();
+    // resetFly();
 }
 
 function draw() {
@@ -69,7 +70,13 @@ function draw() {
  */
 function moveFly() {
     // Move the fly
-    fly.x += fly.speed;
+    // fly.speedX = 1 * noise(0.1 * frameCount);
+    // fly.x += fly.speedX;
+    // fly.y += fly.speedY;
+    fly.x = width * noise(0.005 * frameCount);
+    fly.y = height * noise(0.005 * frameCount + 10000);
+
+    console.log('x: ' + fly.x + '\ny: ' + fly.y)
     // Handle the fly going off the canvas
     if (fly.x > width) {
         resetFly();
