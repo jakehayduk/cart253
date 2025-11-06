@@ -9,12 +9,61 @@ Also hides overflow.
 
 **********************************************/
 
-body {
-  padding: 0;
+* {
   margin: 0;
+  box-sizing: border-box;
+}
+
+body {
   display: grid; /* Set up the grid and justify/align to center */
   justify-content: center;
   align-content: center;
   height: 100vh; /* Body is the height of the viewport */
   overflow: hidden; /* Hide anything that goes off the window size */
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 640px;
+  height: 480px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  padding: 50px;
+}
+
+.play {
+  font-weight: 600;
+  padding: 10px 15px 10px 15px;
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.5s;
+  width: min-content;
+  display: inline;
+}
+
+.play:hover {
+  scale: 1.05;
+  background-color: greenyellow;
+}
+
+input {
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+p {
+  color: white;
+  margin-top: 20px;
+  font-size: 1.2rem;
 }

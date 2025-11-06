@@ -15,6 +15,26 @@
 
 // "use strict";
 
+// $('.container').html("hello, there");
+
+// $(".play").on('click', function() {
+//     $('.container').hide();
+//     console.log("play")
+// })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Creates the canvas and initializes the fly
  */
@@ -25,10 +45,6 @@ function setup() {
     // resetFly();
 
     flies = [];
-
-    flies.push(createFly());
-
-    
 }
 
 let flyScore = 0;
@@ -36,6 +52,14 @@ let stopwatch = 0;
 let gameOver = false;
 let gameStart = false;
 let countdown = 3;
+let totalFlies = 10;
+let gamePlay = false;
+
+function play() {
+    console.log("play")
+    $('.container').hide();
+    gamePlay = true;
+}
 
 // Our frog
 const frog = {
@@ -88,7 +112,7 @@ function draw() {
         checkTongueFlyOverlap(flies[i], i);
     }
 
-    if (flyScore == 5) {
+    if (flyScore == totalFlies) {
         gameOver = true;
     }
 }
@@ -233,10 +257,13 @@ function drawFrog() {
 }
 
 function drawScore() {
-    push();
-    textSize(20);
-    text('FLY SCORE: ' + flyScore, 30, 40); 
-    pop();
+    if (gameStart == true) {
+        push();
+        textSize(20);
+        text('FLY SCORE: ' + flyScore, 30, 40); 
+        pop();
+    }
+    
 }
 
 function drawStopwatch() {
@@ -248,9 +275,9 @@ function drawStopwatch() {
         if (gameStart == true) {
         }
         if (gameOver == false) {
-            stopwatch = ((frameCount) / 60).toFixed(2);
+            stopwatch = ((frameCount) / 60);
         }
-        text((stopwatch).toFixed(2), 615, 40); 
+        text((stopwatch - 3).toFixed(2), 615, 40); 
         pop();
     }
 }
@@ -261,17 +288,19 @@ function drawCountdown() {
         textSize(100);
         textStyle(BOLD);
         textAlign(CENTER);
-        text(countdown, 320, 240); 
+        text(countdown, 320, 270); 
         pop();
     }
     
 }
 
 const interval = setInterval(function() {
-    countdown--;
-    if (countdown < 1) {
-        clearInterval(interval);
-        gameStart = true;
+    if (gamePlay == true) {
+        countdown--;
+        if (countdown < 1) {
+            clearInterval(interval);
+            gameStart = true;
+        }
     }
 }, 1000)
 
@@ -310,9 +339,9 @@ function mousePressed() {
 // Interval fly spawner
 
 setInterval(function() {
-    if (flies.length < 5)
+    if (gameStart == true && flies.length < totalFlies)
     flies.push(createFly());
-}, 2000)
+}, 500)
 
 // Stopwatch
 
