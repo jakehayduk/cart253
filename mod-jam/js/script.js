@@ -32,6 +32,10 @@ function setup() {
 }
 
 let flyScore = 0;
+let stopwatch = 0;
+let gameOver = false;
+let gameStart = false;
+let countdown = 3;
 
 // Our frog
 const frog = {
@@ -64,7 +68,7 @@ function createFly() {
         noise: random(1000, 20000),
         noiseSeed: random(0, 1000),
         ghost: false,
-        fallRate: 4
+        fallRate: 5
     };
     return newFly;
 }
@@ -75,11 +79,17 @@ function draw() {
     moveTongue();
     drawFrog();
     drawScore();
+    drawStopwatch();
+    drawCountdown();
 
     for (let i = 0; i < flies.length; i++) {
         moveFly(flies[i]);
         drawFly(flies[i], i);
         checkTongueFlyOverlap(flies[i], i);
+    }
+
+    if (flyScore == 5) {
+        gameOver = true;
     }
 }
 
@@ -118,7 +128,7 @@ function moveFly(fly) {
  * Draws the fly as a black circle
  */
 function drawFly(fly, flyNum) {
-    text(flyNum, fly.x - 4, fly.y + -15);
+    // text(flyNum, fly.x - 4, fly.y + -15);
     // Body
     push();
     noStroke();
@@ -126,7 +136,7 @@ function drawFly(fly, flyNum) {
         fill("#000000");
     }
     else {
-        fill("#FFEFBF00")
+        fill("#b3354aff")
     }
     ellipse(fly.x, fly.y, fly.size);
     pop();
@@ -137,7 +147,7 @@ function drawFly(fly, flyNum) {
         fill("#00000055");
     }
     else {
-        fill("#FFEFBF00")
+        fill("#b3354a55")
     }
     ellipse(fly.x, fly.y + 3 * sin(frameCount * 0.8) + 2, fly.size - 2);
     pop();
@@ -147,7 +157,7 @@ function drawFly(fly, flyNum) {
         fill("#00000055");
     }
     else {
-        fill("#FFEFBF00")
+        fill("#b3354a55")
     }
     ellipse(fly.x, fly.y - 3 * sin(frameCount * 0.8) - 2, fly.size - 2);
     pop();
@@ -229,6 +239,42 @@ function drawScore() {
     pop();
 }
 
+function drawStopwatch() {
+    if (gameStart == true) {
+        push();
+        textSize(25);
+        textAlign(RIGHT);
+        textStyle(BOLD);
+        if (gameStart == true) {
+        }
+        if (gameOver == false) {
+            stopwatch = ((frameCount) / 60).toFixed(2);
+        }
+        text((stopwatch).toFixed(2), 615, 40); 
+        pop();
+    }
+}
+
+function drawCountdown() {
+    if (gameStart == false) {
+        push();
+        textSize(100);
+        textStyle(BOLD);
+        textAlign(CENTER);
+        text(countdown, 320, 240); 
+        pop();
+    }
+    
+}
+
+const interval = setInterval(function() {
+    countdown--;
+    if (countdown < 1) {
+        clearInterval(interval);
+        gameStart = true;
+    }
+}, 1000)
+
 /**
  * Handles the tongue overlapping the fly
  */
@@ -244,7 +290,6 @@ function checkTongueFlyOverlap(fly, flyNum) {
             removeFly();
             // flies.splice(flyNum, flyNum + 1);
             fly.ghost = true;
-            console.log(flyNum);
             flyScore++;
             // Bring back the tongue
             frog.tongue.state = "inbound";
@@ -262,7 +307,15 @@ function mousePressed() {
     }
 }
 
+// Interval fly spawner
+
 setInterval(function() {
     if (flies.length < 5)
     flies.push(createFly());
 }, 2000)
+
+// Stopwatch
+
+// setInterval(function() {
+//     stopwatch = Math.ceil((stopwatch + 0.01) * 100) / 100;
+// }, 10)
