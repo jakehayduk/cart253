@@ -67,3 +67,9 @@ p {
   margin-top: 20px;
   font-size: 1.2rem;
 }
+
+h2 {
+  text-align: right;
+  font-size: 5rem;
+  color: white;
+}

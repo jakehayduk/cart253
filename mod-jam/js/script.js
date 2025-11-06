@@ -1,13 +1,12 @@
 /**
- * Frogfrogfrog
- * Pippin Barr
+ * The Frog Assassin
+ * Pippin Barr x Jake Haydukk
  * 
- * A game of catching flies with your frog-tongue
+ * A game of catching flies with your frog-tongue as quickly as possible
  * 
  * Instructions:
- * - Move the frog with your mouse
- * - Click to launch the tongue
- * - Catch flies
+ * - Use your mouse cursor to whack them with your long tongue!
+ * - Aim for the lowest timer score possible.
  * 
  * Made with p5
  * https://p5js.org/
@@ -15,34 +14,11 @@
 
 // "use strict";
 
-// $('.container').html("hello, there");
-
-// $(".play").on('click', function() {
-//     $('.container').hide();
-//     console.log("play")
-// })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
- * Creates the canvas and initializes the fly
+ * Creates the canvas and creates the fly array
  */
 function setup() {
     createCanvas(640, 480);
-
-    // Give the fly its first random position
-    // resetFly();
 
     flies = [];
 }
@@ -52,13 +28,18 @@ let stopwatch = 0;
 let gameOver = false;
 let gameStart = false;
 let countdown = 3;
-let totalFlies = 10;
+let totalFlies = 3;
 let gamePlay = false;
 
+// function that is started by the play button in the HTML
+// Hides the container and starts the countdown
+
 function play() {
-    console.log("play")
-    $('.container').hide();
-    gamePlay = true;
+    if ($('input').val()) {
+        console.log("play")
+        $('.container').hide();
+        gamePlay = true;
+    } 
 }
 
 // Our frog
@@ -87,12 +68,10 @@ function createFly() {
         x: 320,
         y: 240, 
         size: random(5, 9),
-        speedX: 0,
-        speedY: 0,
-        noise: random(1000, 20000),
-        noiseSeed: random(0, 1000),
-        ghost: false,
-        fallRate: 5
+        noise: random(1000, 20000), // More randomization
+        noiseSeed: random(0, 1000), // Random noise seed because otherwise they do the same movement
+        ghost: false, // fly is dead when true
+        fallRate: 5 // for when the flies fall
     };
     return newFly;
 }
@@ -106,54 +85,43 @@ function draw() {
     drawStopwatch();
     drawCountdown();
 
+    // for each fly
     for (let i = 0; i < flies.length; i++) {
         moveFly(flies[i]);
         drawFly(flies[i], i);
         checkTongueFlyOverlap(flies[i], i);
     }
 
+    // game ends once all the flies are caught
+    // sends the score to the title page
     if (flyScore == totalFlies) {
         gameOver = true;
+        $('.container').show();
+        $('h2').text((stopwatch - 3).toFixed(2));
     }
 }
 
-/**
- * Moves the fly according to its speed
- * Resets the fly if it gets all the way to the right
- */
+// The movement of the flies
 function moveFly(fly) {
-    // Move the fly
-    // fly.speedX = 1 * noise(0.1 * frameCount);
-    // fly.x += fly.speedX;
-    // fly.y += fly.speedY;
+    // move the fly randomly when it's alive
     if (fly.ghost == false) {
         noiseSeed(fly.noiseSeed);
         fly.x = width * noise(0.005 * frameCount);
         fly.y = height * noise(0.005 * frameCount + fly.noise);
     }
+    // make it fall once it dies (gets caught)
     else {
         if (fly.fallRate < 50) {
             fly.fallRate = fly.fallRate + fly.fallRate / 9.807;
         }
         fly.y = fly.y + fly.fallRate / 5;
     }
-    // FLY IS NOT MOVING WHEN EATEN BECAUSE IT CAN'T BE RESET BUT JUST MAKE IT DISAPPEAR INSTEAD
-
-    // console.log('x: ' + fly.x + '\ny: ' + fly.y)
-    // Handle the fly going off the canvas
-    // if (fly.x > width) {
-    //     resetFly();
-    // }
-
-    // console.log(fly.x + "\n" + fly.y)
 }
 
-/**
- * Draws the fly as a black circle
- */
+// draws the fly as a black circle and flapping wings
 function drawFly(fly, flyNum) {
-    // text(flyNum, fly.x - 4, fly.y + -15);
-    // Body
+    // body of the fly (circle)
+    // if statements that make the fly red once it is dead (caught)
     push();
     noStroke();
     if (fly.ghost == false) {
@@ -187,13 +155,6 @@ function drawFly(fly, flyNum) {
     pop();
 }
 
-/**
- * Resets the fly to the left with a random y
- */
-function removeFly() {
-    // fly.x = 0;
-    // fly.y = random(0, 300);
-}
 
 /**
  * Moves the frog to the mouse position on x
@@ -243,19 +204,20 @@ function drawFrog() {
 
     // Draw the rest of the tongue
     push();
-    stroke("#ff0000");
+    stroke("#e01f2fff");
     strokeWeight(frog.tongue.size);
     line(frog.tongue.x, frog.tongue.y, frog.body.x, frog.body.y);
     pop();
 
     // Draw the frog's body
     push();
-    fill("#00ff00");
+    fill("#73d621ff");
     noStroke();
     ellipse(frog.body.x, frog.body.y, frog.body.size);
     pop();
 }
 
+// draws the text that states the amount of flies you've killed
 function drawScore() {
     if (gameStart == true) {
         push();
@@ -266,22 +228,25 @@ function drawScore() {
     
 }
 
+// draws the stopwatch on the top right of the screen
 function drawStopwatch() {
     if (gameStart == true) {
         push();
         textSize(25);
         textAlign(RIGHT);
         textStyle(BOLD);
-        if (gameStart == true) {
-        }
+        // going off of framecount because setInterval wasn't accurate
         if (gameOver == false) {
             stopwatch = ((frameCount) / 60);
         }
+        // compensating for the 3 second countdown
         text((stopwatch - 3).toFixed(2), 615, 40); 
         pop();
     }
 }
 
+
+// draws the countdown for when the game starts
 function drawCountdown() {
     if (gameStart == false) {
         push();
@@ -291,9 +256,10 @@ function drawCountdown() {
         text(countdown, 320, 270); 
         pop();
     }
-    
 }
 
+
+// starts and stops the countdown
 const interval = setInterval(function() {
     if (gamePlay == true) {
         countdown--;
@@ -315,10 +281,9 @@ function checkTongueFlyOverlap(fly, flyNum) {
         // console.log(d);
         const eaten = (d < frog.tongue.size/2 + fly.size/2);
         if (eaten) {
-            // Reset the fly
-            removeFly();
-            // flies.splice(flyNum, flyNum + 1);
+            // sets the subject fly to be dead
             fly.ghost = true;
+            // adds to the score
             flyScore++;
             // Bring back the tongue
             frog.tongue.state = "inbound";
@@ -336,15 +301,9 @@ function mousePressed() {
     }
 }
 
-// Interval fly spawner
+// Interval fly spawner that starts when the game starts and only spawns the nessessary amount
 
 setInterval(function() {
     if (gameStart == true && flies.length < totalFlies)
     flies.push(createFly());
 }, 500)
-
-// Stopwatch
-
-// setInterval(function() {
-//     stopwatch = Math.ceil((stopwatch + 0.01) * 100) / 100;
-// }, 10)
