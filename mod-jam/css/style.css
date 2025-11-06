@@ -26,6 +26,7 @@ body {
 .container {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(20px);
   width: 640px;
   height: 480px;
   display: grid;
@@ -53,13 +54,6 @@ body {
 .play:hover {
   scale: 1.05;
   background-color: greenyellow;
-}
-
-input {
-  padding: 10px;
-  border: none;
-  outline: none;
-  border-radius: 5px;
 }
 
 p {

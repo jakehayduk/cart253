@@ -30,16 +30,14 @@ let gameStart = false;
 let countdown = 3;
 let totalFlies = 3;
 let gamePlay = false;
+let oldTime;
 
 // function that is started by the play button in the HTML
 // Hides the container and starts the countdown
 
 function play() {
-    if ($('input').val()) {
-        console.log("play")
-        $('.container').hide();
-        gamePlay = true;
-    } 
+    $('.container').hide();
+    gamePlay = true;
 }
 
 // Our frog
@@ -97,7 +95,31 @@ function draw() {
     if (flyScore == totalFlies) {
         gameOver = true;
         $('.container').show();
-        $('h2').text((stopwatch - 3).toFixed(2));
+        // display your latest time record and also the previous one, if it exists.
+        // also makes the newer one green if it is shorter and red if it is longer
+        if (oldTime) {
+            if (oldTime < stopwatch) {
+                $('h2').html("<span style='color: red;'>" + (stopwatch).toFixed(2) + "</span>" + "\n" + "<small style='opacity: 0.5; margin-top: -20px;'>" + oldTime + "</small>");
+            }
+            else {
+                $('h2').html("<span style='color: green;'>" + (stopwatch).toFixed(2) + "</span>" + "\n" + "<small style='opacity: 0.5; margin-top: -20px;'>" + oldTime + "</small>");
+            }
+            
+            oldTime = (stopwatch).toFixed(2);
+        }
+        else {
+            $('h2').html((stopwatch).toFixed(2));
+            oldTime = (stopwatch).toFixed(2);
+        }
+        
+        //reset the game so you can play again
+        flyScore = 0;
+        stopwatch = 0;
+        gameOver = false;
+        gameStart = false;
+        gamePlay = false;
+        countdown = 3;
+        flies = [];
     }
 }
 
@@ -235,15 +257,17 @@ function drawStopwatch() {
         textSize(25);
         textAlign(RIGHT);
         textStyle(BOLD);
-        // going off of framecount because setInterval wasn't accurate
-        if (gameOver == false) {
-            stopwatch = ((frameCount) / 60);
-        }
-        // compensating for the 3 second countdown
-        text((stopwatch - 3).toFixed(2), 615, 40); 
+        // the toFixed rounds it to the nearest hundredth, but notably keeps the 00's when they appear
+        text((stopwatch).toFixed(2), 615, 40); 
         pop();
     }
 }
+
+setInterval(function() {
+    if (gameStart == true && gameOver == false) {
+        stopwatch = stopwatch + 0.01
+    }
+}, 10)
 
 
 // draws the countdown for when the game starts
@@ -264,7 +288,7 @@ const interval = setInterval(function() {
     if (gamePlay == true) {
         countdown--;
         if (countdown < 1) {
-            clearInterval(interval);
+            // clearInterval(interval);
             gameStart = true;
         }
     }
