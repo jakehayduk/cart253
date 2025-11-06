@@ -12,6 +12,9 @@ You are a very hungry, killer frog assassin that must kill the flies in front of
 
 > Aim for the lowest timer score possible.
 
+![Gameplay Screenshot](./assets/images/screenshot-1.PNG)
+![Titlescreen Screenshot](./assets/images/screenshot-2.PNG)
+
 ## Attribution
 
 > - This project uses [p5.js](https://p5js.org).
