@@ -67,3 +67,28 @@ h2 {
   font-size: 5rem;
   color: white;
 }
+
+select {
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.hard {
+  font-weight: 600;
+  padding: 10px 15px 10px 15px;
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.5s;
+  display: inline;
+  color: black;
+  font-weight: 700;
+  margin-top: 20px;
+}
+
+.hard:hover {
+  scale: 1.05;
+  background-color: pink;
+}

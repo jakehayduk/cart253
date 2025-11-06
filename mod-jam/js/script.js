@@ -28,10 +28,25 @@ let stopwatch = 0;
 let gameOver = false;
 let gameStart = false;
 let countdown = 3;
-let totalFlies = 3;
+let totalFlies = 10;
 let gamePlay = false;
 let oldTime;
+let hardMode = false;
 
+function hard() {
+    if (hardMode == false) {
+        hardMode = true;
+        $('.hard').css('background-color', 'crimson');
+        $('.hard').css('color', 'white');
+        totalFlies = 20;
+    }
+    else {
+        hardMode = false;
+        $('.hard').css('background-color', 'white');
+        $('.hard').css('color', 'black');
+        totalFlies = 10;
+    }
+}
 // function that is started by the play button in the HTML
 // Hides the container and starts the countdown
 
