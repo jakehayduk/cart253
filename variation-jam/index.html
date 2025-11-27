@@ -12,13 +12,31 @@
 
   <!-- Library script(s) -->
 
+  <!-- Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/12.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.6.0/firebase-database-compat.js"></script>
+  <script type="module">
+        const firebaseConfig = {
+            apiKey: "AIzaSyA72UEM8nYz_lNeOiOpQPNkMURQs0u6Kco",
+            authDomain: "variation-jam.firebaseapp.com",
+            projectId: "variation-jam",
+            storageBucket: "variation-jam.firebasestorage.app",
+            messagingSenderId: "214861936262",
+            appId: "1:214861936262:web:92b845ee98ca4086e2c307",
+            measurementId: "G-MGCWDJ9R60"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+  </script>
+
   <!-- p5.min.js is the main p5 library -->
   <script src="js/libraries/p5.min.js"></script>
   <!-- p5.sound.min.js allows us to use sound -->
   <script src="js/libraries/p5.sound.min.js"></script>
 
   <!-- My script(s) -->
-  <script src="js/script.js"></script>
+  <script src="js/script.js" defer></script>
 </head>
 
 <body>

@@ -1,18 +1,18 @@
 /**
- * Title of Project
- * Author Name
+ * Variation Jam
+ * Jake Hayduk
  * 
- * HOW EMBARRASSING! I HAVE NO DESCRIPTION OF MY PROJECT!
- * PLEASE REMOVE A GRADE FROM MY WORK IF IT'S GRADED!
+ * DESCRIPTION HERE
+ * 
  */
 
 "use strict";
 
 /**
- * OH LOOK I DIDN'T DESCRIBE SETUP!!
+ * Sets up the canvas
 */
 function setup() {
-
+    createCanvas(800, 600);
 }
 
 
@@ -20,5 +20,35 @@ function setup() {
  * OOPS I DIDN'T DESCRIBE WHAT MY DRAW DOES!
 */
 function draw() {
+    background("#E09382");
 
+    if (keyIsDown(65)) {
+        console.log('left');
+    }
+
+    if (keyIsDown(68)) {
+        console.log('left');
+    }
+
+    if (keyIsDown(87)) {
+        console.log('up');
+    }
+
+    if (keyIsDown(83)) {
+        console.log('down');
+    }
 }
+
+// FIREBASE
+
+const db = firebase.database();
+console.log(db);
+
+db.ref('testTree').push({
+    name: 'Jake',
+    price: '$20'
+})
+
+// let blocksRef;
+    
+// blocksRef = db.collection('blocks');
