@@ -13,6 +13,7 @@
 */
 function setup() {
     createCanvas(800, 600);
+    noSmooth();
 }
 
 // Variable definitions
@@ -22,7 +23,9 @@ let players = [];
 let myName;
 let playerID;
 let playerRef;
+let playerSpeed = 4;
 
+// Random function (Because p5 stopped me from calling the random function outside of setup or draw)
 function randomGen(min, max) {
     return Math.floor(Math.random() * (Math.ceil(max) - Math.ceil(min) + 1)) + Math.ceil(min);
 }
@@ -31,17 +34,6 @@ function initGame() {
     const allPlayersRef = firebase.database().ref('players');
 
     allPlayersRef.on('value', (snapshot) => {
-        // updatePlayers();
-        const playersObject = snapshot.val() || {};
-
-        // const playersArray = Object.values(playersObject);
-        // console.log(playersArray);
-        
-        // Object.keys(testPlayers).forEach((key) => {
-        //     drawPlayer(testPlayers[key]);
-        // })
-        // testPlayers = snapshot.val();
-        // console.log(testPlayers);
 
         const newPlayersArray = [];
         snapshot.forEach(playerSnapshot => {
@@ -54,29 +46,9 @@ function initGame() {
     })
     allPlayersRef.on('child_added', (snapshot) => {
         const addedPlayer = snapshot.val();
-        players.push(createPlayer());
+        // players.push(createPlayer());
     })
 }
-
-$('button').on('click', function() {
-    if (gameInit == false && $('input').val().length > 2) {
-        myName = $('input').val();
-        $('.menu').hide();
-        initGame();
-        gameInit = true;
-    }
-})
-
-$(document).on('keypress',function(e) {
-    if(e.which == 13) {
-        if (gameInit == false && $('input').val().length > 2) {
-            myName = $('input').val();
-            $('.menu').hide();
-            initGame();
-            gameInit = true;
-        }
-    }
-});
 
 // FIREBASE
 
@@ -85,13 +57,19 @@ const db = firebase.database();
 
 let dummyPlayer = {
     x: randomGen(200, 600),
-    y: randomGen(150, 450)
+    y: randomGen(150, 450),
+    size: 64,
+    direction: "F",
+    moving: false
 }
 
 // Create a new player (YOU!!)
 const newPlayerRef = db.ref('players').push({
     x: dummyPlayer.x,
-    y: dummyPlayer.y
+    y: dummyPlayer.y,
+    size: dummyPlayer.size,
+    direction: "F",
+    moving: false
 })
 
 // Get your unique id
@@ -113,20 +91,23 @@ playerRef.onDisconnect().remove();
 function joinGame() {
     playerRef.set({
         name: myName,
-        x: 400,
-        y: 300
+        x: dummyPlayer.x,
+        y: dummyPlayer.y,
+        size: dummyPlayer.size,
+        direction: "F",
+        moving: false
     })
 }
 
-function createPlayer() {
-    console.log('creating player')
-    const newPlayer = {
-        x: 0,
-        y: 0,
-        size: 50
-    };
-    return newPlayer;
-}
+// function createPlayer() {
+//     console.log('creating player')
+//     const newPlayer = {
+//         x: 0,
+//         y: 0,
+//         size: 50
+//     };
+//     return newPlayer;
+// }
 
 
 
@@ -142,42 +123,167 @@ function createPlayer() {
 function draw() {
     background("#E09382");
 
-    if (keyIsDown(65)) {
-        dummyPlayer.x -= 5;
+    if (gameInit == true) {
+        // Left
+        if (keyIsDown(65)) {
+            if (dummyPlayer.x > 0) {
+                dummyPlayer.x -= playerSpeed;
+                dummyPlayer.direction = "L";
+                dummyPlayer.moving = true;
+            }
+        }
+
+        // Right
+        else if (keyIsDown(68)) {
+            if (dummyPlayer.x < width) {
+                dummyPlayer.x += playerSpeed;
+                dummyPlayer.direction = "R";
+                dummyPlayer.moving = true;
+            }
+        }
+
+        // Up
+        else if (keyIsDown(87)) {
+            if (dummyPlayer.y > 0) {
+                dummyPlayer.y -= playerSpeed;
+                dummyPlayer.direction = "B";
+                dummyPlayer.moving = true;
+            }
+        }
+
+        // Down
+        else if (keyIsDown(83)) {
+            if (dummyPlayer.y < height) {
+                dummyPlayer.y += playerSpeed;
+                dummyPlayer.direction = "F";
+                dummyPlayer.moving = true;
+            }
+        }
+
+        else {
+            dummyPlayer.moving = false;
+        }
+
+        playerRef.update({
+            x: dummyPlayer.x,
+            y: dummyPlayer.y,
+            direction: dummyPlayer.direction,
+            moving: dummyPlayer.moving
+        })
+
+        for (let i = 0; i < allPlayers.length; i++) {
+            drawPlayer(allPlayers[i]);
+        }
     }
 
-    if (keyIsDown(68)) {
-        dummyPlayer.x += 5;
-    }
+    
+}
+let img1;
+let img2;
+let img3;
+let img4;
+let img5;
+let img6;
+let img7;
+let img8;
+let font1
+function preload() {
 
-    if (keyIsDown(87)) {
-        dummyPlayer.y -= 5;
-    }
+    //Load images
+    img1 = loadImage('./assets/images/walk-forwards.gif');
+    img2 = loadImage('./assets/images/walk-backwards.gif');
+    img3 = loadImage('./assets/images/walk-left.gif');
+    img4 = loadImage('./assets/images/walk-right.gif');
+    img5 = loadImage('./assets/images/static-forwards.gif');
+    img6 = loadImage('./assets/images/static-backwards.gif');
+    img7 = loadImage('./assets/images/static-left.gif');
+    img8 = loadImage('./assets/images/static-right.gif');
 
-    if (keyIsDown(83)) {
-        dummyPlayer.y += 5;
-        console.log(allPlayers)
-    }
-
-    playerRef.update({
-        x: dummyPlayer.x,
-        y: dummyPlayer.y
-    })
-
-    for (let i = 0; i < allPlayers.length; i++) {
-        drawPlayer(allPlayers[i]);
-    }
+    // Load fonts
+    font1 = loadFont('./assets/fonts/Micro-5.ttf');
 }
 
 function drawPlayer(player) {
+    // Torso
+    // push();
+    // noStroke();
+    // fill("black");
+    // rect(player.x - player.size/2/10, player.y - player.size/2, player.size/10, player.size);
+    // pop();
+
+    // Head
+    // push();
+    // noFill();
+    // strokeWeight(5)
+    // stroke("black");
+    // circle(player.x, player.y - player.size, player.size);
+    // pop();
+
+    if (player.direction == "F") {
+        if (player.moving == true) {
+            image(img1, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+        }
+        else {
+            image(img5, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+        }
+    }
+    if (player.direction == "B") {
+        if (player.moving == true) {
+            image(img2, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+        }
+        else {
+            image(img6, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+        }
+    }
+    if (player.direction == "L") {
+        if (player.moving == true) {
+            image(img3, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+        }
+        else {
+            image(img7, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+        }
+    }
+    if (player.direction == "R") {
+        if (player.moving == true) {
+            image(img4, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+        }
+        else {
+            image(img8, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
+        }
+    }
+    
+
+    // Draw player name above
     push();
-    noStroke();
-    fill("red");
-    // rect(player.x - player.size/2, player.y - player.size/2, player.size, player.size);
-    rect(player.x, player.y, 20, 20);
+    textSize(30);
+    fill(255, 255, 255);
+    strokeWeight(4);
+    textFont(font1);
+    textAlign(CENTER)
+    text(player.name, player.x, player.y - player.size/1.2);
     pop();
 }
 
-// function updatePlayers {
+// BUTTONS
 
-// }
+$('button').on('click', function() {
+    if (gameInit == false && $('input').val().length > 2) {
+        myName = $('input').val();
+        $('.menu').hide();
+        joinGame();
+        initGame();
+        gameInit = true;
+    }
+})
+
+$(document).on('keypress',function(e) {
+    if(e.which == 13) {
+        if (gameInit == false && $('input').val().length > 2) {
+            myName = $('input').val();
+            $('.menu').hide();
+            joinGame();
+            initGame();
+            gameInit = true;
+        }
+    }
+});
