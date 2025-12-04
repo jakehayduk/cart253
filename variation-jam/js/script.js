@@ -11,9 +11,14 @@
 /**
  * Sets up the canvas
 */
+
+let bg;
 function setup() {
     createCanvas(800, 600);
     noSmooth();
+    bg = loadImage('./assets/images/background.gif');
+    // song[0].setVolume(0.2);
+    // song[0].play();
 }
 
 // Variable definitions
@@ -24,6 +29,7 @@ let myName;
 let playerID;
 let playerRef;
 let playerSpeed = 4;
+let addedMessage;
 
 // Random function (Because p5 stopped me from calling the random function outside of setup or draw)
 function randomGen(min, max) {
@@ -32,6 +38,7 @@ function randomGen(min, max) {
 
 function initGame() {
     const allPlayersRef = firebase.database().ref('players');
+    const allMessagesRef = firebase.database().ref('messages');
 
     allPlayersRef.on('value', (snapshot) => {
 
@@ -44,9 +51,16 @@ function initGame() {
 
        allPlayers = newPlayersArray;
     })
-    allPlayersRef.on('child_added', (snapshot) => {
-        const addedPlayer = snapshot.val();
-        // players.push(createPlayer());
+    allMessagesRef.on('child_added', (snapshot) => {
+        addedMessage = snapshot.val();
+        console.log(addedMessage.message);
+
+        $('.bubble-modal p').html($('.bubble-modal p').html() + '<br>' + addedMessage.name + ': '+ addedMessage.message)
+
+        // snapshot.forEach(messageSnapshot => {
+        //     const message = messageSnapshot.val()
+
+        // })
     })
 }
 
@@ -60,7 +74,8 @@ let dummyPlayer = {
     y: randomGen(150, 450),
     size: 64,
     direction: "F",
-    moving: false
+    moving: false,
+    hat: 0
 }
 
 // Create a new player (YOU!!)
@@ -69,7 +84,8 @@ const newPlayerRef = db.ref('players').push({
     y: dummyPlayer.y,
     size: dummyPlayer.size,
     direction: "F",
-    moving: false
+    moving: false,
+    hat: 0
 })
 
 // Get your unique id
@@ -95,7 +111,8 @@ function joinGame() {
         y: dummyPlayer.y,
         size: dummyPlayer.size,
         direction: "F",
-        moving: false
+        moving: false,
+        hat: 0
     })
 }
 
@@ -121,7 +138,7 @@ function joinGame() {
  * OOPS I DIDN'T DESCRIBE WHAT MY DRAW DOES!
 */
 function draw() {
-    background("#E09382");
+    background(bg);
 
     if (gameInit == true) {
         // Left
@@ -186,7 +203,12 @@ let img5;
 let img6;
 let img7;
 let img8;
-let font1
+let hat;
+
+let font1;
+
+let song;
+
 function preload() {
 
     //Load images
@@ -198,12 +220,17 @@ function preload() {
     img6 = loadImage('./assets/images/static-backwards.gif');
     img7 = loadImage('./assets/images/static-left.gif');
     img8 = loadImage('./assets/images/static-right.gif');
+    hat = ["NO HAT", loadImage('./assets/images/hat-1.gif'), loadImage('./assets/images/hat-2.gif'), loadImage('./assets/images/hat-3.gif'), loadImage('./assets/images/hat-4.gif'), loadImage('./assets/images/hat-5.gif'), loadImage('./assets/images/hat-6.gif'), loadImage('./assets/images/hat-7.gif'), loadImage('./assets/images/hat-8.gif')];
 
     // Load fonts
     font1 = loadFont('./assets/fonts/Micro-5.ttf');
+
+    // Load sounds
+    song = [loadSound('./assets/sounds/game-1.mp3'),loadSound('./assets/sounds/game-2.mp3'),loadSound('./assets/sounds/game-3.mp3')];
 }
 
 function drawPlayer(player) {
+
     // Torso
     // push();
     // noStroke();
@@ -251,24 +278,32 @@ function drawPlayer(player) {
             image(img8, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
         }
     }
+
+    if (player.hat > 0) {
+        image(hat[player.hat], player.x - player.size/2, player.y - player.size, player.size, player.size * 1.5);
+    }
     
 
     // Draw player name above
     push();
     textSize(30);
-    fill(255, 255, 255);
+    fill(255, 255, 255, 200);
     strokeWeight(4);
     textFont(font1);
     textAlign(CENTER)
-    text(player.name, player.x, player.y - player.size/1.2);
+    text(player.name, player.x, (player.y - player.size) + 3 * sin(frameCount * 0.02));
     pop();
 }
 
 // BUTTONS
 
+let bubbleOpen = false;
+let costumeOpen = false;
+let sendMessage;
+
 $('button').on('click', function() {
-    if (gameInit == false && $('input').val().length > 2) {
-        myName = $('input').val();
+    if (gameInit == false && $('.username').val().length > 2) {
+        myName = $('.username').val();
         $('.menu').hide();
         joinGame();
         initGame();
@@ -278,12 +313,64 @@ $('button').on('click', function() {
 
 $(document).on('keypress',function(e) {
     if(e.which == 13) {
-        if (gameInit == false && $('input').val().length > 2) {
-            myName = $('input').val();
+        if (gameInit == false && $('.username').val().length > 2) {
+            myName = $('.username').val();
             $('.menu').hide();
             joinGame();
             initGame();
             gameInit = true;
         }
+        if (bubbleOpen = true && $('.bubble-modal-input').val().length > 0) {
+            sendMessage = $('.bubble-modal-input').val();
+            const newMessageRef = db.ref('messages').push({
+                name: myName,
+                message: sendMessage
+            })
+            $('.bubble-modal-input').val('');
+        }
     }
 });
+
+$('.bubble-button').on('click', function() {
+    if (bubbleOpen == false && costumeOpen == false) {
+        bubbleOpen = true;
+        $('.bubble-modal').css('display', 'flex');
+    }
+    else {
+        bubbleOpen = false;
+        $('.bubble-modal').hide();
+    }
+})
+
+$('.bubble-modal-close').on('click', function() {
+    if (bubbleOpen == true) {
+        bubbleOpen = false;
+        $('.bubble-modal').hide();
+    }
+})
+
+$('.costume-button').on('click', function() {
+    if (costumeOpen == false && bubbleOpen == false) {
+        costumeOpen = true;
+        $('.costume-modal').css('display', 'flex');
+    }
+    else {
+        costumeOpen = false;
+        $('.costume-modal').hide();
+    }
+})
+
+$('.costume-modal-close').on('click', function() {
+    if (costumeOpen == true) {
+        costumeOpen = false;
+        $('.costume-modal').hide();
+    }
+})
+
+$('.costume').on('click', function() {
+    const clickedCostume = ($(this).attr('id')).split('-');
+
+    playerRef.update({
+        hat: Number(clickedCostume[1])
+    })
+})

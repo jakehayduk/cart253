@@ -13,7 +13,8 @@
   <!-- Library script(s) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jersey+10&family=Micro+5&display=swap" rel="stylesheet">
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
   <!-- Firebase CDN -->
@@ -45,8 +46,49 @@
 
 <body>
   <div class="menu">
-    <input type="text" placeholder="Name" name="username">
+    <h1>Multiplayer</h1>
+    <input type="text" placeholder="Name" name="username" class="username">
     <button>Join Game</button>
+  </div>
+  <div class="container">
+    <img src="./assets/images/bubble.gif" alt="" class="bubble-button button">
+    <img src="./assets/images/costume.gif" alt="" class="costume-button button">
+    <div class="bubble-modal">
+      <p></p>
+      <input type="text" name="chat-input" placeholder="Write a message" class="bubble-modal-input">
+      <div class="bubble-modal-close">&times;</div>
+    </div>
+    <div class="costume-modal">
+      <div class="costume-modal-close">&times;</div>
+      <h2>Wearables</h2>
+      <div class="costume" id="costume-0">
+        <img src="./assets/images/hat-0.gif" alt="">
+      </div>
+      <div class="costume" id="costume-1">
+        <img src="./assets/images/hat-1.gif" alt="">
+      </div>
+      <div class="costume" id="costume-2">
+        <img src="./assets/images/hat-2.gif" alt="">
+      </div>
+      <div class="costume" id="costume-3">
+        <img src="./assets/images/hat-3.gif" alt="">
+      </div>
+      <div class="costume" id="costume-4">
+        <img src="./assets/images/hat-4.gif" alt="">
+      </div>
+      <div class="costume" id="costume-5">
+        <img src="./assets/images/hat-5.gif" alt="">
+      </div>
+      <div class="costume" id="costume-6">
+        <img src="./assets/images/hat-6.gif" alt="">
+      </div>
+      <div class="costume" id="costume-7">
+        <img src="./assets/images/hat-7.gif" alt="" class="skirt">
+      </div>
+      <div class="costume" id="costume-8">
+        <img src="./assets/images/hat-8.gif" alt="" class="skirt">
+      </div>
+    </div>
   </div>
 </body>
 

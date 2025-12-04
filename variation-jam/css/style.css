@@ -15,13 +15,18 @@ Also hides overflow.
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "Micro-5";
+  src: url(./assets/fonts/Micro-5.ttf) format('ttf');
+}
+
 body {
   display: grid; /* Set up the grid and justify/align to center */
   justify-content: center;
   align-content: center;
   height: 100vh; /* Body is the height of the viewport */
   overflow: hidden; /* Hide anything that goes off the window size */
-  font-family: "Inter", sans-serif;
+  font-family: "Micro-5", sans-serif;
 }
 
 .menu {
@@ -35,6 +40,26 @@ body {
   align-items: center;
   flex-direction: column;
   gap: 20px;
+}
+
+h1 {
+  font-family: 'Jersey 10', sans-serif;
+  font-size: 100px;
+  animation: floating 4s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 input {
@@ -65,4 +90,165 @@ button {
 button:hover {
   opacity: 0.7;
   scale: 1.05;
+}
+
+.container {
+  position: absolute;
+  width: 800px;
+  height: 600px;
+  /* background-color: white; */
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px;
+}
+
+.button {
+  height: 64px;
+  image-rendering: pixelated;
+  cursor: pointer;
+  transition: all 0.3s;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.button:hover {
+  opacity: 0.7;
+  scale: 1.1;
+  rotate: 10deg;
+}
+
+.bubble-modal {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  position: absolute;
+  background-color: white;
+  height: 80%;
+  width: 80%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 5px black solid;
+}
+
+.bubble-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  padding: 5px;
+  font-size: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.bubble-modal-close:hover {
+  opacity: 0.7;
+}
+
+.bubble-modal-input {
+  bottom: 0;
+  padding: 30px;
+  font-family: 'Micro-5', sans-serif;
+  font-size: 20px;
+}
+
+.bubble-modal p {
+  height: min-content;
+  width: 100%;
+  padding: 30px;
+  font-family: "Micro-5", sans-serif;
+  font-size: 20px;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.costume-modal {
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: absolute;
+  background-color: white;
+  height: 80%;
+  width: 80%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 5px black solid;
+  padding: 30px;
+  padding-top: 60px;
+  gap: 30px;
+  overflow-y: scroll;
+}
+
+.costume-modal-close {
+  position: fixed;
+  top: 10px;
+  right: 15px;
+  padding: 5px;
+  font-size: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  -webkit-user-drag: none;
+  user-select: none;
+  z-index: 10;
+}
+
+.costume-modal-close:hover {
+  opacity: 0.7;
+}
+
+.costume {
+  height: 150px;
+  width: 150px;
+  background-color: rosybrown;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.costume:hover {
+  opacity: 0.7;
+}
+
+.costume img {
+  position: absolute;
+  left: 50%;
+  bottom: 30%;
+  transform: translate(-50%, 50%);
+  width: 80%;
+  image-rendering: pixelated;
+}
+
+.skirt {
+  bottom: 70%!important;
+}
+
+.costume-modal h2 {
+  position: absolute;
+  top: 15px;
+  left: 30px;
+  font-size: 35px;
 }
