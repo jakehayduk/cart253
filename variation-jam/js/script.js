@@ -205,6 +205,7 @@ function draw() {
             health: dummyPlayer.health,
         })
 
+        // Draw each player in the array and also filter the ones who are in battle
         for (let i = 0; i < allPlayers.length; i++) {
             drawPlayer(allPlayers[i]);
             const battlePlayers = allPlayers.filter(player => player.battle == true);
@@ -213,6 +214,7 @@ function draw() {
             }
         }
 
+        // When you die
         if (dummyPlayer.health < 1 && death == false) {
             playerRef.remove();
             $('.death').show();
@@ -220,6 +222,8 @@ function draw() {
         }
     }
 }
+
+// Defining asset variables
 let img1;
 let img2;
 let img3;
@@ -262,8 +266,10 @@ function preload() {
     sound3 = loadSound('./assets/sounds/game-6.mp3');
 }
 
+// Draws each player on the screen using the gif images and some text
 function drawPlayer(player) {
 
+    // Each of these if statements handles a different direction that is stored in each player object, changing the image depending on the direction and if it is moving or not
     if (player.direction == "F") {
         if (player.moving == true) {
             image(img1, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
@@ -296,10 +302,12 @@ function drawPlayer(player) {
             image(img8, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
         }
     }
+    // If the player is sleeping ("S")
     if (player.direction == "S") {
         image(img9, player.x - player.size/2, player.y - player.size/2, player.size, player.size)
     }
 
+    // Add the whatever hat that the player is wearing (unless they're sleeping)
     if (player.hat > 0 && player.direction != "S") {
         image(hat[player.hat], player.x - player.size/2, player.y - player.size, player.size, player.size * 1.5);
     }
@@ -335,12 +343,15 @@ function drawPlayer(player) {
 // Clicking on someone else
 function mousePressed() {
     for (let i = 0; i < allPlayers.length; i++) {
+        // Check for overlap
         if (checkOverlap(allPlayers[i])) {
+            // If the player does not share your ID, is not sleeping, and does not have a grace period, send them to battle
             if (allPlayers[i].id != playerID && allPlayers[i].direction != 'S' && allPlayers[i].grace == false) {
                 playerRef.update({
                     battle: true
                 })
 
+                // Send the other player to battle
                 const chosenPlayer = firebase.database().ref('players/' + allPlayers[i].id)
                 chosenPlayer.update({
                     battle: true
@@ -350,21 +361,24 @@ function mousePressed() {
     }
 }
 
+// Overlap check
 function checkOverlap(player) {
     return dist(mouseX, mouseY, player.x, player.y) < player.size;
 }
 
+// Starts the battle sequence
 function battle(battlePlayers) {
     if (intoBattle == false) {
-        console.log(battlePlayers);
         intoBattle = true;
 
         $('.battle-modal').css('display', 'grid');
         $('.battle-modal').css('opacity', '1');
+        // Display their names
         console.log(battlePlayers[0].name + " VS " + battlePlayers[1].name)
         $('.battle-modal .left h2').text(battlePlayers[0].name);
         $('.battle-modal .right h2').text(battlePlayers[1].name);
 
+        // Mostly all the animation and timing
         setTimeout(function() {
             const myInterval = setInterval(myTimer, 15);
             function myTimer() {
@@ -375,10 +389,12 @@ function battle(battlePlayers) {
                 $('.star').remove();
                 $('.battle-modal').css('opacity', '0');
 
+                // Descrease health randomly
                 dummyPlayer.health = dummyPlayer.health - randomGen(0, 50);
                 dummyPlayer.direction = "F";
                 innactiveTimer = 0;
 
+                // Players enter the grace period
                 playerRef.update({
                     battle: false,
                     grace: true
@@ -389,6 +405,7 @@ function battle(battlePlayers) {
                     intoBattle = false;
                 }, 1000)
 
+                // Exit grace period
                 setTimeout(function() {
                     playerRef.update({
                         grace: false
@@ -419,6 +436,7 @@ $('button').on('click', function() {
 })
 
 $(document).on('keypress',function(e) {
+    // Enter key works to join the game and also to send messages in the chat
     if(e.which == 13) {
         if (gameInit == false && $('.username').val().length > 2 && $('.username').val().length < 32) {
             myName = $('.username').val();
@@ -431,6 +449,7 @@ $(document).on('keypress',function(e) {
         }
         if (bubbleOpen = true && $('.bubble-modal-input').val().length > 0 && $('.bubble-modal-input').val().length < 100) {
             sendMessage = $('.bubble-modal-input').val();
+            // Add the new message to Firebase
             const newMessageRef = db.ref('messages').push({
                 name: myName,
                 message: sendMessage
@@ -442,6 +461,8 @@ $(document).on('keypress',function(e) {
         }
     }
 });
+
+// Modal opening and closing
 
 $('.bubble-button').on('click', function() {
     if (bubbleOpen == false && costumeOpen == false && settingsOpen == false) {
@@ -493,7 +514,7 @@ $('.costume-modal-close').on('click', function() {
 
 $('.costume').on('click', function() {
     const clickedCostume = ($(this).attr('id')).split('-');
-
+    // Send the costume number to Firebase so that everyone can see them
     playerRef.update({
         hat: Number(clickedCostume[1])
     })
@@ -532,6 +553,7 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
+// Sliders to control the game's volume
 $('#myRange').on('input', function() {
     backgroundMusicVol = ($(this).val()) / 100;
     song[songNumber].setVolume(backgroundMusicVol);
