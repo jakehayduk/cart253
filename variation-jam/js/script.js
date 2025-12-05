@@ -47,6 +47,7 @@ let innactiveTimer = 0;
 let songNumber = 0;
 let backgroundMusicVol = 0.2;
 let soundEffectVol = 0.1;
+let death = false;
 
 setInterval(function() {
     innactiveTimer++;
@@ -101,7 +102,8 @@ let dummyPlayer = {
     moving: false,
     hat: 0,
     health: 100,
-    battle: false
+    battle: false,
+    grace: false
 }
 
 // Create a new player (YOU!!)
@@ -113,7 +115,8 @@ const newPlayerRef = db.ref('players').push({
     moving: false,
     hat: 0,
     health: dummyPlayer.health,
-    battle: false
+    battle: false,
+    grace: false
 })
 
 // Get your unique id
@@ -142,7 +145,8 @@ function joinGame() {
         moving: false,
         hat: 0,
         health: dummyPlayer.health,
-        battle: false
+        battle: false,
+        grace: false
     })
 }
 
@@ -230,6 +234,12 @@ function draw() {
                 battle(battlePlayers);
             }
         }
+
+        if (dummyPlayer.health < 1 && death == false) {
+            playerRef.remove();
+            $('.death').show();
+            death == true;
+        }
     }
 }
 let img1;
@@ -248,6 +258,7 @@ let font1;
 let song;
 let sound1;
 let sound2;
+let sound3;
 
 function preload() {
 
@@ -270,6 +281,7 @@ function preload() {
     song = [loadSound('./assets/sounds/game-1.mp3'),loadSound('./assets/sounds/game-2.mp3'),loadSound('./assets/sounds/game-3.mp3')];
     sound1 = loadSound('./assets/sounds/game-4.mp3');
     sound2 = loadSound('./assets/sounds/game-5.mp3');
+    sound3 = loadSound('./assets/sounds/game-6.mp3');
 }
 
 function drawPlayer(player) {
@@ -340,20 +352,13 @@ function drawPlayer(player) {
     textAlign(CENTER);
     text(player.health, player.x, player.y - player.size/1.05)
     pop();
-
-    // if (player.battle == true && intoBattle == false) {
-    //     battle(player);
-    //     setTimeout(function() {
-    //         intoBattle = true;
-    //     }, 100)
-    // }
 }
 
 // Clicking on someone else
 function mousePressed() {
     for (let i = 0; i < allPlayers.length; i++) {
         if (checkOverlap(allPlayers[i])) {
-            if (allPlayers[i].id != playerID && allPlayers[i].direction != 'S') {
+            if (allPlayers[i].id != playerID && allPlayers[i].direction != 'S' && allPlayers[i].grace == false) {
                 playerRef.update({
                     battle: true
                 })
@@ -392,18 +397,25 @@ function battle(battlePlayers) {
                 $('.star').remove();
                 $('.battle-modal').css('opacity', '0');
 
-                dummyPlayer.health = dummyPlayer.health - randomGen(0, 30);
+                dummyPlayer.health = dummyPlayer.health - randomGen(0, 50);
                 dummyPlayer.direction = "F";
                 innactiveTimer = 0;
 
                 playerRef.update({
-                    battle: false
+                    battle: false,
+                    grace: true
                 })
 
                 setTimeout(function() {
                     $('.battle-modal').hide();
                     intoBattle = false;
                 }, 1000)
+
+                setTimeout(function() {
+                    playerRef.update({
+                        grace: false
+                    })
+                }, 10000)
             }, 3000)
         }, 5000)
     }
@@ -423,6 +435,8 @@ $('button').on('click', function() {
         joinGame();
         initGame();
         gameInit = true;
+        sound1.setVolume(soundEffectVol);
+        sound1.play();
     }
 })
 
@@ -434,6 +448,8 @@ $(document).on('keypress',function(e) {
             joinGame();
             initGame();
             gameInit = true;
+            sound1.setVolume(soundEffectVol);
+            sound1.play();
         }
         if (bubbleOpen = true && $('.bubble-modal-input').val().length > 0 && $('.bubble-modal-input').val().length < 100) {
             sendMessage = $('.bubble-modal-input').val();
@@ -442,6 +458,9 @@ $(document).on('keypress',function(e) {
                 message: sendMessage
             })
             $('.bubble-modal-input').val('');
+            sound2.setVolume(soundEffectVol);
+            sound2.rate(-1);
+            sound2.play();
         }
     }
 });
@@ -508,10 +527,14 @@ $('.settings-button').on('click', function() {
     if (settingsOpen == false && bubbleOpen == false && costumeOpen == false) {
         settingsOpen = true;
         $('.settings-modal').css('display', 'flex');
+        sound2.setVolume(soundEffectVol);
+        sound2.play();
     }
     else {
         settingsOpen = false;
         $('.settings-modal').hide();
+        sound1.setVolume(soundEffectVol);
+        sound1.play();
     }
 })
 
@@ -519,6 +542,8 @@ $('.settings-modal-close').on('click', function() {
     if (settingsOpen == true) {
         settingsOpen = false;
         $('.settings-modal').hide();
+        sound1.setVolume(soundEffectVol);
+        sound1.play();
     }
 })
 
