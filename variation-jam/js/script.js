@@ -17,8 +17,20 @@ function setup() {
     createCanvas(800, 600);
     noSmooth();
     bg = loadImage('./assets/images/background.gif');
-    // song[0].setVolume(0.2);
-    // song[0].play();
+}
+
+function backgroundMusic() {
+    song[songNumber].setVolume(backgroundMusicVol);
+    song[songNumber].play();
+    song[songNumber].onended(nextSong);
+}
+
+function nextSong() {
+    songNumber++;
+    if (songNumber > 2) {
+        songNumber = 0;
+    }
+    backgroundMusic();
 }
 
 // Variable definitions
@@ -32,6 +44,9 @@ let playerSpeed = 4;
 let addedMessage;
 let intoBattle = false;
 let innactiveTimer = 0;
+let songNumber = 0;
+let backgroundMusicVol = 0.2;
+let soundEffectVol = 0.1;
 
 setInterval(function() {
     innactiveTimer++;
@@ -46,6 +61,7 @@ function randomGen(min, max) {
 }
 
 function initGame() {
+    backgroundMusic();
     const allPlayersRef = firebase.database().ref('players');
     const allMessagesRef = firebase.database().ref('messages');
 
@@ -230,6 +246,8 @@ let hat;
 let font1;
 
 let song;
+let sound1;
+let sound2;
 
 function preload() {
 
@@ -250,6 +268,8 @@ function preload() {
 
     // Load sounds
     song = [loadSound('./assets/sounds/game-1.mp3'),loadSound('./assets/sounds/game-2.mp3'),loadSound('./assets/sounds/game-3.mp3')];
+    sound1 = loadSound('./assets/sounds/game-4.mp3');
+    sound2 = loadSound('./assets/sounds/game-5.mp3');
 }
 
 function drawPlayer(player) {
@@ -393,6 +413,7 @@ function battle(battlePlayers) {
 
 let bubbleOpen = false;
 let costumeOpen = false;
+let settingsOpen = false;
 let sendMessage;
 
 $('button').on('click', function() {
@@ -426,13 +447,17 @@ $(document).on('keypress',function(e) {
 });
 
 $('.bubble-button').on('click', function() {
-    if (bubbleOpen == false && costumeOpen == false) {
+    if (bubbleOpen == false && costumeOpen == false && settingsOpen == false) {
         bubbleOpen = true;
         $('.bubble-modal').css('display', 'flex');
+        sound2.setVolume(soundEffectVol);
+        sound2.play();
     }
     else {
         bubbleOpen = false;
         $('.bubble-modal').hide();
+        sound1.setVolume(soundEffectVol);
+        sound1.play();
     }
 })
 
@@ -440,17 +465,23 @@ $('.bubble-modal-close').on('click', function() {
     if (bubbleOpen == true) {
         bubbleOpen = false;
         $('.bubble-modal').hide();
+        sound1.setVolume(soundEffectVol);
+        sound1.play();
     }
 })
 
 $('.costume-button').on('click', function() {
-    if (costumeOpen == false && bubbleOpen == false) {
+    if (costumeOpen == false && bubbleOpen == false && settingsOpen == false) {
         costumeOpen = true;
         $('.costume-modal').css('display', 'flex');
+        sound2.setVolume(soundEffectVol);
+        sound2.play();
     }
     else {
         costumeOpen = false;
         $('.costume-modal').hide();
+        sound1.setVolume(soundEffectVol);
+        sound1.play();
     }
 })
 
@@ -458,6 +489,8 @@ $('.costume-modal-close').on('click', function() {
     if (costumeOpen == true) {
         costumeOpen = false;
         $('.costume-modal').hide();
+        sound1.setVolume(soundEffectVol);
+        sound1.play();
     }
 })
 
@@ -467,6 +500,26 @@ $('.costume').on('click', function() {
     playerRef.update({
         hat: Number(clickedCostume[1])
     })
+    sound2.setVolume(soundEffectVol);
+    sound2.play();
+})
+
+$('.settings-button').on('click', function() {
+    if (settingsOpen == false && bubbleOpen == false && costumeOpen == false) {
+        settingsOpen = true;
+        $('.settings-modal').css('display', 'flex');
+    }
+    else {
+        settingsOpen = false;
+        $('.settings-modal').hide();
+    }
+})
+
+$('.settings-modal-close').on('click', function() {
+    if (settingsOpen == true) {
+        settingsOpen = false;
+        $('.settings-modal').hide();
+    }
 })
 
 // Put the player to sleep when they switch tabs
@@ -475,3 +528,12 @@ document.addEventListener("visibilitychange", () => {
         dummyPlayer.direction = "S";
     }
 });
+
+$('#myRange').on('input', function() {
+    backgroundMusicVol = ($(this).val()) / 100;
+    song[songNumber].setVolume(backgroundMusicVol);
+})
+
+$('#myRange2').on('input', function() {
+    soundEffectVol = ($(this).val()) / 100;
+})
