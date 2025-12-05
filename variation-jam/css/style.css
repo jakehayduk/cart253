@@ -46,6 +46,7 @@ h1 {
   font-family: 'Jersey 10', sans-serif;
   font-size: 100px;
   animation: floating 4s ease-in-out infinite;
+  margin-bottom: 30px;
 }
 
 @keyframes floating {
@@ -66,8 +67,8 @@ input {
   border: none;
   padding: 15px;
   border-radius: 5px;
-  font-size: 16px;
-  font-family: "Inter", sans-serif;
+  font-size: 25px;
+  font-family: "Micro-5", sans-serif;
 }
 
 input:focus {
@@ -75,9 +76,9 @@ input:focus {
 }
 
 button {
-  font-family: "Inter", sans-serif;
   padding: 15px;
-  font-size: 16px;
+  font-size: 25px;
+  font-family: "Micro-5", sans-serif;
   border: none;
   border-radius: 5px;
   background: rgb(127, 187, 86);
@@ -90,13 +91,13 @@ button {
 button:hover {
   opacity: 0.7;
   scale: 1.05;
+  rotate: 10deg;
 }
 
 .container {
   position: absolute;
   width: 800px;
   height: 600px;
-  /* background-color: white; */
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -104,6 +105,7 @@ button:hover {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 15px;
+  overflow: hidden;
 }
 
 .button {
@@ -251,4 +253,108 @@ button:hover {
   top: 15px;
   left: 30px;
   font-size: 35px;
+}
+
+.battle-modal {
+  display: none;
+  position: absolute;
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  gap: 30px;
+  overflow: hidden;
+  grid-template-columns: 1fr 1fr;
+  animation: battle-in 2s cubic-bezier(.42,.22,.42,.85);
+  transition: all 1s;
+  opacity: 1;
+}
+
+@keyframes battle-in {
+  0% {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    clip-path: circle(100% at 50% 50%);
+  }
+}
+
+.vs {
+  font-family: 'Jersey 10', sans-serif;
+  font-size: 150px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: vs-in 3s;
+}
+
+@keyframes vs-in {
+  0% {
+    transform: translate(-50%, -50%) scale(20);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(20);
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.battle-modal .left, .right {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.battle-modal .left {
+  background-color: crimson;
+}
+
+.battle-modal .right {
+  background-color: crimson;
+}
+
+.battle-modal h2 {
+  font-size: 70px;
+}
+
+.star {
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: star 0.2s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-500%, -50%);
+}
+
+@keyframes star {
+  0% {
+    transform: translate(-50%, -50%);
+  }
+
+  100% {
+    transform: translate(-500%, -50%);
+  }
 }

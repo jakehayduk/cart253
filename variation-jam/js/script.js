@@ -30,6 +30,15 @@ let playerID;
 let playerRef;
 let playerSpeed = 4;
 let addedMessage;
+let intoBattle = false;
+let innactiveTimer = 0;
+
+setInterval(function() {
+    innactiveTimer++;
+    if (innactiveTimer > 15) {
+        dummyPlayer.direction = "S";
+    }
+}, 1000)
 
 // Random function (Because p5 stopped me from calling the random function outside of setup or draw)
 function randomGen(min, max) {
@@ -53,7 +62,6 @@ function initGame() {
     })
     allMessagesRef.on('child_added', (snapshot) => {
         addedMessage = snapshot.val();
-        console.log(addedMessage.message);
 
         $('.bubble-modal p').html($('.bubble-modal p').html() + '<br>' + addedMessage.name + ': '+ addedMessage.message)
 
@@ -75,17 +83,21 @@ let dummyPlayer = {
     size: 64,
     direction: "F",
     moving: false,
-    hat: 0
+    hat: 0,
+    health: 100,
+    battle: false
 }
 
 // Create a new player (YOU!!)
 const newPlayerRef = db.ref('players').push({
-    x: dummyPlayer.x,
+    x: -1000, // Render them off the screen before the game initializes
     y: dummyPlayer.y,
     size: dummyPlayer.size,
     direction: "F",
     moving: false,
-    hat: 0
+    hat: 0,
+    health: dummyPlayer.health,
+    battle: false
 })
 
 // Get your unique id
@@ -112,7 +124,9 @@ function joinGame() {
         size: dummyPlayer.size,
         direction: "F",
         moving: false,
-        hat: 0
+        hat: 0,
+        health: dummyPlayer.health,
+        battle: false
     })
 }
 
@@ -148,6 +162,7 @@ function draw() {
                 dummyPlayer.direction = "L";
                 dummyPlayer.moving = true;
             }
+            innactiveTimer = 0;
         }
 
         // Right
@@ -157,6 +172,7 @@ function draw() {
                 dummyPlayer.direction = "R";
                 dummyPlayer.moving = true;
             }
+            innactiveTimer = 0;
         }
 
         // Up
@@ -166,6 +182,7 @@ function draw() {
                 dummyPlayer.direction = "B";
                 dummyPlayer.moving = true;
             }
+            innactiveTimer = 0;
         }
 
         // Down
@@ -175,6 +192,7 @@ function draw() {
                 dummyPlayer.direction = "F";
                 dummyPlayer.moving = true;
             }
+            innactiveTimer = 0;
         }
 
         else {
@@ -185,15 +203,18 @@ function draw() {
             x: dummyPlayer.x,
             y: dummyPlayer.y,
             direction: dummyPlayer.direction,
-            moving: dummyPlayer.moving
+            moving: dummyPlayer.moving,
+            health: dummyPlayer.health,
         })
 
         for (let i = 0; i < allPlayers.length; i++) {
             drawPlayer(allPlayers[i]);
+            const battlePlayers = allPlayers.filter(player => player.battle == true);
+            if (battlePlayers.length > 0) {
+                battle(battlePlayers);
+            }
         }
     }
-
-    
 }
 let img1;
 let img2;
@@ -203,6 +224,7 @@ let img5;
 let img6;
 let img7;
 let img8;
+let img9;
 let hat;
 
 let font1;
@@ -220,6 +242,7 @@ function preload() {
     img6 = loadImage('./assets/images/static-backwards.gif');
     img7 = loadImage('./assets/images/static-left.gif');
     img8 = loadImage('./assets/images/static-right.gif');
+    img9 = loadImage('./assets/images/sleep.gif');
     hat = ["NO HAT", loadImage('./assets/images/hat-1.gif'), loadImage('./assets/images/hat-2.gif'), loadImage('./assets/images/hat-3.gif'), loadImage('./assets/images/hat-4.gif'), loadImage('./assets/images/hat-5.gif'), loadImage('./assets/images/hat-6.gif'), loadImage('./assets/images/hat-7.gif'), loadImage('./assets/images/hat-8.gif')];
 
     // Load fonts
@@ -230,21 +253,6 @@ function preload() {
 }
 
 function drawPlayer(player) {
-
-    // Torso
-    // push();
-    // noStroke();
-    // fill("black");
-    // rect(player.x - player.size/2/10, player.y - player.size/2, player.size/10, player.size);
-    // pop();
-
-    // Head
-    // push();
-    // noFill();
-    // strokeWeight(5)
-    // stroke("black");
-    // circle(player.x, player.y - player.size, player.size);
-    // pop();
 
     if (player.direction == "F") {
         if (player.moving == true) {
@@ -278,8 +286,11 @@ function drawPlayer(player) {
             image(img8, player.x - player.size/2, player.y - player.size/2, player.size, player.size);
         }
     }
+    if (player.direction == "S") {
+        image(img9, player.x - player.size/2, player.y - player.size/2, player.size, player.size)
+    }
 
-    if (player.hat > 0) {
+    if (player.hat > 0 && player.direction != "S") {
         image(hat[player.hat], player.x - player.size/2, player.y - player.size, player.size, player.size * 1.5);
     }
     
@@ -291,8 +302,91 @@ function drawPlayer(player) {
     strokeWeight(4);
     textFont(font1);
     textAlign(CENTER)
-    text(player.name, player.x, (player.y - player.size) + 3 * sin(frameCount * 0.02));
+    text(player.name, player.x, (player.y - player.size * 1.4) + 3 * sin(frameCount * 0.02));
     pop();
+
+    // Health bar
+    push();
+    fill(255, 0, 0, 100);
+    noStroke();
+    rect(player.x - player.size, player.y - player.size * 1.2, (player.size * 2) * (player.health/100), player.size/3);
+    pop();
+
+    // Health number
+    push();
+    textSize(25);
+    fill(255, 255, 255, 150);
+    textFont(font1);
+    textAlign(CENTER);
+    text(player.health, player.x, player.y - player.size/1.05)
+    pop();
+
+    // if (player.battle == true && intoBattle == false) {
+    //     battle(player);
+    //     setTimeout(function() {
+    //         intoBattle = true;
+    //     }, 100)
+    // }
+}
+
+// Clicking on someone else
+function mousePressed() {
+    for (let i = 0; i < allPlayers.length; i++) {
+        if (checkOverlap(allPlayers[i])) {
+            if (allPlayers[i].id != playerID && allPlayers[i].direction != 'S') {
+                playerRef.update({
+                    battle: true
+                })
+
+                const chosenPlayer = firebase.database().ref('players/' + allPlayers[i].id)
+                chosenPlayer.update({
+                    battle: true
+                })
+            }
+        }
+    }
+}
+
+function checkOverlap(player) {
+    return dist(mouseX, mouseY, player.x, player.y) < player.size;
+}
+
+function battle(battlePlayers) {
+    if (intoBattle == false) {
+        console.log(battlePlayers);
+        intoBattle = true;
+
+        $('.battle-modal').css('display', 'grid');
+        $('.battle-modal').css('opacity', '1');
+        console.log(battlePlayers[0].name + " VS " + battlePlayers[1].name)
+        $('.battle-modal .left h2').text(battlePlayers[0].name);
+        $('.battle-modal .right h2').text(battlePlayers[1].name);
+
+        setTimeout(function() {
+            const myInterval = setInterval(myTimer, 15);
+            function myTimer() {
+                $('.battle-modal').append("<div class='star' style='rotate:" + randomGen(0, 360) + "deg; scale:" + randomGen(0.5, 2) + "'></div>");
+            }
+            setTimeout(function() {
+                clearInterval(myInterval);
+                $('.star').remove();
+                $('.battle-modal').css('opacity', '0');
+
+                dummyPlayer.health = dummyPlayer.health - randomGen(0, 30);
+                dummyPlayer.direction = "F";
+                innactiveTimer = 0;
+
+                playerRef.update({
+                    battle: false
+                })
+
+                setTimeout(function() {
+                    $('.battle-modal').hide();
+                    intoBattle = false;
+                }, 1000)
+            }, 3000)
+        }, 5000)
+    }
 }
 
 // BUTTONS
@@ -313,14 +407,14 @@ $('button').on('click', function() {
 
 $(document).on('keypress',function(e) {
     if(e.which == 13) {
-        if (gameInit == false && $('.username').val().length > 2) {
+        if (gameInit == false && $('.username').val().length > 2 && $('.username').val().length < 32) {
             myName = $('.username').val();
             $('.menu').hide();
             joinGame();
             initGame();
             gameInit = true;
         }
-        if (bubbleOpen = true && $('.bubble-modal-input').val().length > 0) {
+        if (bubbleOpen = true && $('.bubble-modal-input').val().length > 0 && $('.bubble-modal-input').val().length < 100) {
             sendMessage = $('.bubble-modal-input').val();
             const newMessageRef = db.ref('messages').push({
                 name: myName,
@@ -374,3 +468,10 @@ $('.costume').on('click', function() {
         hat: Number(clickedCostume[1])
     })
 })
+
+// Put the player to sleep when they switch tabs
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+        dummyPlayer.direction = "S";
+    }
+});
