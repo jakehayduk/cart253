@@ -2,14 +2,14 @@
  * Variation Jam
  * Jake Hayduk
  * 
- * DESCRIPTION HERE
+ * Online multiplayer game that has basic features
  * 
  */
 
 "use strict";
 
 /**
- * Sets up the canvas
+ * Sets up the canvas and loads the background image
 */
 
 let bg;
@@ -19,12 +19,14 @@ function setup() {
     bg = loadImage('./assets/images/background.gif');
 }
 
+// Handles the background music
 function backgroundMusic() {
     song[songNumber].setVolume(backgroundMusicVol);
     song[songNumber].play();
     song[songNumber].onended(nextSong);
 }
 
+// Goes to the next background song
 function nextSong() {
     songNumber++;
     if (songNumber > 2) {
@@ -61,13 +63,16 @@ function randomGen(min, max) {
     return Math.floor(Math.random() * (Math.ceil(max) - Math.ceil(min) + 1)) + Math.ceil(min);
 }
 
+// Begin the initialization after logging in
 function initGame() {
     backgroundMusic();
     const allPlayersRef = firebase.database().ref('players');
     const allMessagesRef = firebase.database().ref('messages');
 
+    // Fires everytime something is changed in the database
     allPlayersRef.on('value', (snapshot) => {
 
+        // Make an array out of the players
         const newPlayersArray = [];
         snapshot.forEach(playerSnapshot => {
             const player = playerSnapshot.val();
@@ -77,23 +82,18 @@ function initGame() {
 
        allPlayers = newPlayersArray;
     })
+
+    // Handle messages when they're added
     allMessagesRef.on('child_added', (snapshot) => {
         addedMessage = snapshot.val();
-
         $('.bubble-modal p').html($('.bubble-modal p').html() + '<br>' + addedMessage.name + ': '+ addedMessage.message)
-
-        // snapshot.forEach(messageSnapshot => {
-        //     const message = messageSnapshot.val()
-
-        // })
     })
 }
-
-// FIREBASE
 
 // Database reference
 const db = firebase.database();
 
+// Making things easier by using a local dummy player controller
 let dummyPlayer = {
     x: randomGen(200, 600),
     y: randomGen(150, 450),
@@ -106,7 +106,7 @@ let dummyPlayer = {
     grace: false
 }
 
-// Create a new player (YOU!!)
+// Create a new player (YOU!!) in Firebase
 const newPlayerRef = db.ref('players').push({
     x: -1000, // Render them off the screen before the game initializes
     y: dummyPlayer.y,
@@ -128,13 +128,7 @@ playerRef = db.ref('players/' + playerID);
 // Remove player on disconnect
 playerRef.onDisconnect().remove();
 
-// onValue(db, (snapshot) => {
-//     const data = snapshot.val();
-//     console.log(data);
-// })
-
-
-
+// Set the values as you join the game
 function joinGame() {
     playerRef.set({
         name: myName,
@@ -150,30 +144,13 @@ function joinGame() {
     })
 }
 
-// function createPlayer() {
-//     console.log('creating player')
-//     const newPlayer = {
-//         x: 0,
-//         y: 0,
-//         size: 50
-//     };
-//     return newPlayer;
-// }
-
-
-
-// const player = {
-//     x: 400,
-//     y: 300,
-//     size: 50
-// }
-
 /**
- * OOPS I DIDN'T DESCRIBE WHAT MY DRAW DOES!
+ * Draws the images and objects on the screen (more in detail below)
 */
 function draw() {
     background(bg);
 
+    // If the game has started, use the keyboard to control the player
     if (gameInit == true) {
         // Left
         if (keyIsDown(65)) {
@@ -218,7 +195,8 @@ function draw() {
         else {
             dummyPlayer.moving = false;
         }
-
+        
+        // Update the necessary values in Firebase in real time
         playerRef.update({
             x: dummyPlayer.x,
             y: dummyPlayer.y,
