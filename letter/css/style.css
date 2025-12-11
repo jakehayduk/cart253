@@ -1,0 +1,90 @@
+/*********************************************
+
+Here is a description of any special CSS used.
+In this case it's just padding and margin to 0
+and then centring the canvas (and anything else)
+using the CSS Grid.
+
+Also hides overflow.
+
+**********************************************/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "Micro-5";
+  src: url(./assets/fonts/Micro-5.ttf) format('ttf');
+}
+
+body {
+  display: grid; /* Set up the grid and justify/align to center */
+  justify-content: center;
+  align-content: center;
+  height: 100vh; /* Body is the height of the viewport */
+  overflow: hidden; /* Hide anything that goes off the window size */
+  font-family: "Micro-5", sans-serif;
+}
+
+.container {
+  position: absolute;
+  width: 800px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px;
+  overflow: hidden;
+}
+
+.letter {
+  width: 80%;
+  height: 80%;
+  background-color: white;
+  border: 4px solid black;
+  padding: 5%;
+  display: none;
+  animation: letter-in 1s;
+  position: relative;
+}
+
+@keyframes letter-in {
+  0% {
+    scale: 0;
+    rotate: -500deg;
+  }
+
+  100% {
+    scale: 1;
+    rotate: 0;
+  }
+}
+
+h1 {
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.close {
+  font-weight: 900;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 40px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: brown;
+}
