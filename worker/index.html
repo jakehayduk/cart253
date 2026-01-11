@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker</title>
+    <link rel="icon" type="image/x-icon" href=".//images/logo.png">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore-compat.js"></script>
+    <script type="module">
+        const firebaseConfig = {
+            apiKey: "AIzaSyDl3ipaHcNEERt0zWmRT-OPUzj4gHnxROk",
+            authDomain: "worker-3af9a.firebaseapp.com",
+            projectId: "worker-3af9a",
+            storageBucket: "worker-3af9a.firebasestorage.app",
+            messagingSenderId: "101774707008",
+            appId: "1:101774707008:web:806898a451c9572d8b52a5",
+            measurementId: "G-BL4MMC6ZT7"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="./script.js" defer></script>
+</head>
+<body>
+    <div class="new-project">
+        <input type="text" class="add-input" placeholder="New project" maxlength="40" name="add-input">
+        <div class="colours">
+            <div class="colour colour-1 colour-select"></div>
+            <div class="colour colour-2"></div>
+            <div class="colour colour-3"></div>
+            <div class="colour colour-4"></div>
+            <div class="colour colour-5"></div>
+        </div>
+        <button class="add">&plus;</button>
+    </div>
+    <div class="projects">
+        <div class="project" id="">Name</div>
+    </div>
+    <div class="delete">Delete</div>
+    <div class="stats">
+        <h2 class="total-time">Total time: </h2>
+        <div class="time-share"></div>
+    </div>
+</body>
