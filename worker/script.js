@@ -205,69 +205,10 @@ $(document).ready(function() {
                     $('.projects').append("<div class='project' id='" + doc.id + "' style='background-color: " + data.colour + ";'><button class='start' id='" + doc.id + "'>&#9654;</button><p><b>" + data.name + "</b></p><p class='seconds'>" + data.duration.toFixed(2) + " s</p><p class='minutes'>" + (data.duration/60).toFixed(2) + " mins</p><p class='hours'>" + (data.duration/60/60).toFixed(2) + " hrs</p><p class='timer'>" + data.duration + "</p><button class='reset' id='" + doc.id + "'>&#8634;</button></div>");
                 }
 
-                // totalTime = totalTime + data.duration;
-                // console.log(totalTime);
                 if (data.duration > 0) {
-                    // $('.time-share').append("<div class='share' style='background-color: " + data.colour + "; width: " + (data.duration / totalTime) * 100 +"%'>" + data.name + "<br>" + ((data.duration / totalTime) * 100).toFixed() + "%</div>");
-                    
                     $('.time-share').append("<div class='share " + doc.id + "' style='background-color: " + data.colour + ";'>" + data.name + "<span></span></div>");
                 }
-                // console.log(totalTotalTime);
-                // console.log((data.duration / totalTime) * 100);
-                
-                // console.log($('.project').length)
-                // if (docIndex == $('.project').length) {
-                //     console.log(data.duration);
-                // }
-                // docIndex ++;
-                // console.log(totalTime);
             }
         })
-    })
-
-    // Get the top seller
-    projectsRef.orderBy("price", "desc").limit(1).onSnapshot(querySnapshot => {
-        querySnapshot.docs.forEach((doc) => {
-            const data = doc.data();
-            $('.top-seller').html('<b>' + data.name + '</b> is the top seller! ($' + data.price + ')');
-        })
-    })
-
-    // When a "data-block" is clicked, bring up the relevant information on the viewable 3D cube in another modal window
-    $('body').on('click', '.data-block', function() {
-        
-        let docRef = projectsRef.doc($(this).attr('id'));
-        docRef.get().then((doc) => {
-            if (doc.exists) {
-                const data = doc.data();
-                $('.modal-cube-data-1').text(data.name);
-                $('.modal-cube-data-2').text(data.city);
-                $('.modal-cube-data-3').text(data.age);
-                $('.modal-cube-data-4').text(data.criteria);
-                $('.modal-cube-data-5').text(data.friend);
-                $('.modal-cube-data-6').text(data.goal);
-
-                $('.modal-cube h2').text(data.name + '\'s data block');
-
-                $('.modal-cube').css('display', 'flex');
-                $('.modal-cube-close').show();
-
-                // Reset the cube's location in 3D space
-                x = 0;
-                y = 0;
-                x2 = 0;
-                y2 = 0;
-                zoom = 1.2;
-                $('.container').css('transform', 'scale(' + zoom + ')');
-            }
-            else {
-                console.log('No such document.');
-            }
-        })
-    })
-
-    $('.modal-cube-close').on('click', function() {
-        $('.modal-cube').hide();
-        $('.modal-cube-close').hide();
     })
 })
