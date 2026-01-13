@@ -74,20 +74,41 @@ $(document).ready(function() {
             // console.log($('.share.' + id).width());
             
             
+            
             if (i == $('.project').length - 1) {
-                totalTime = totalTimer;
-                if (totalTime < 60) {
-                    $('.total-time').text('Total time: ' + (totalTime).toFixed(2) + ' s');
+                if (money == true) {
+                    totalTime = totalTimer;
+                    const moneyTime = totalTime/60/60;
+                    $('.total-time').text('Total money: $' + (moneyTime * 28).toFixed(2));
                 }
-                else if (totalTime > 60 && totalTime < 3600) {
-                    $('.total-time').text('Total time: ' + (totalTime/60).toFixed(2) + ' mins');
-                }
-                else if (totalTime > 3600) {
-                    $('.total-time').text('Total time: ' + (totalTime/60/60).toFixed(2) + ' hrs');
+                else {
+                    totalTime = totalTimer;
+                    if (totalTime < 60) {
+                        $('.total-time').text('Total time: ' + (totalTime).toFixed(2) + ' s');
+                    }
+                    else if (totalTime > 60 && totalTime < 3600) {
+                        $('.total-time').text('Total time: ' + (totalTime/60).toFixed(2) + ' mins');
+                    }
+                    else if (totalTime > 3600) {
+                        $('.total-time').text('Total time: ' + (totalTime/60/60).toFixed(2) + ' hrs');
+                    }
                 }
             }
+
+            
         })
     }, 100)
+
+    let money = false;
+
+    $('.total-time').on('click', function() {
+        if (money == false) {
+            money = true;
+        }
+        else {
+            money = false;
+        }
+    })
 
     setTimeout(function() {
         projectsRef.add({
