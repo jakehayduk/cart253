@@ -5,9 +5,10 @@ $(document).ready(function() {
     const db = firebase.firestore();
 
     let projectsRef;
+    let notesRef;
     
     projectsRef = db.collection('projects');
-
+    notesRef = db.collection('notes');
 
     $('.add').on('click', function() {
         const projectName = $('.add-input').val();
@@ -19,6 +20,12 @@ $(document).ready(function() {
     $('.colour').on('click', function() {
         $('.colour').removeClass('colour-select');
         $(this).addClass('colour-select');
+    })
+
+    $('.add-note-button').on('click', function() {
+        const noteText = $('.add-note').val();
+        addNote(noteText);
+        $('.add-note').val('');
     })
 
     // Uploads data once survey is completed
@@ -211,4 +218,56 @@ $(document).ready(function() {
             }
         })
     })
+
+    function addNote(noteText) {
+        notesRef.add({
+            text: noteText,
+            date: new Date()
+        })
+    }
+
+    notesRef.orderBy("date", "asc").onSnapshot(querySnapshot => {
+        $('.notes-list').html('');
+        querySnapshot.docs.forEach((doc) => {
+            const data = doc.data();
+            const date = data.date;
+            $('.notes-list').append("<div class='note'><div class='note-check'><div class='note-id' style='display: none;'>" + doc.id + "</div></div><p>" + data.text + "</p><span>" + date.toDate().toDateString() + "</span></div>")
+        })
+    })
+
+    $('body').on('click', '.note-check', function() { 
+        const note = $(this);
+        note.css('transform', 'scale(100)');
+        note.css('background-color', 'rgb(48, 161, 76))');
+        note.css('opacity', '0');
+        note.parent().css('background-color', 'rgb(48, 161, 76)');
+
+        setTimeout(function() {
+            note.parent().css('transform', 'scaleY(0)');
+            const id = note.find('.note-id').text();
+
+            setTimeout(function() {
+                notesRef.doc(id).delete();
+            }, 500)
+        }, 600)
+    })
+
+    // Handle enter key presses
+
+    $(document).on('keypress',function(e) {
+        if(e.which == 13) {
+            if ($('.add-input').is(':focus')) {
+                const projectName = $('.add-input').val();
+                const colour = $('.colour-select').css('background-color');
+                addProject(projectName, colour);
+                $('.add-input').val('');
+            }
+            else if ($('.add-note').is(':focus')) {
+                const noteText = $('.add-note').val();
+                addNote(noteText);
+                $('.add-note').val('');
+            }
+        }
+    });
+
 })
