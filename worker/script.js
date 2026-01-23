@@ -66,14 +66,10 @@ $(document).ready(function() {
             if (id) {
                 $(`.share.${id}`).css('width', percentage + '%');
                 $(`.share.${id} span`).text(percentage.toFixed() + '%');
-                if ($('.share.' + id).width() !== undefined && $('.share.' + id).width() < 50) {
+                if ($('.share.' + id).width() !== undefined && $('.share.' + id).width() < $('.share.' + id + ' p').width() - 10) {
                     $('.share.' + id).text('');
                 }
-            }
-            
-            // console.log($('.share.' + id).width());
-            
-            
+            }            
             
             if (i == $('.project').length - 1) {
                 if (money == true) {
@@ -234,7 +230,7 @@ $(document).ready(function() {
                 }
 
                 if (data.duration > 0) {
-                    $('.time-share').append("<div class='share " + doc.id + "' style='background-color: " + data.colour + ";'>" + data.name + "<span></span></div>");
+                    $('.time-share').append("<div class='share " + doc.id + "' style='background-color: " + data.colour + ";'><p>" + data.name + "</p><span></span></div>");
                 }
             }
         })
