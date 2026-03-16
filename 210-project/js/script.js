@@ -2,7 +2,7 @@
  * CART-210 Exploration Game
  * Jake Hayduk
  * 
- * Online multiplayer game that has basic features
+ * 
  * 
  */
 
@@ -226,38 +226,8 @@ function draw() {
         heart.x = heart.x2 + camera.x3;
         heart.y = heart.y2 + camera.y3;
         
-        push();
-        fill(220, 0, 40);
-        noStroke();
-        arrow.x = heart.x;
-        arrow.y = heart.y;
-        if (heart.x > width - 30) {
-            arrow.x = width - 30;
-        }
-
-        if (heart.x < 0 + 30) {
-            arrow.x = 0 + 30;
-        }
-
-        if (heart.y > height - 30) {
-            arrow.y = height - 30;
-        }
-
-        if (heart.y < 0 + 30) {
-            arrow.y = 0 + 30;
-        }
         
-        angleMode(DEGREES);
-        translate(arrow.x, arrow.y);
-        rotate((atan2(heart.y - arrow.y, heart.x - arrow.x)))
-        translate(-arrow.x, -arrow.y);
-        if (heart.x > width + 30 || heart.x < 0 - 30 || heart.y > height + 30 || heart.y < 0 - 30) {
-            // triangle(arrow.x - 15, arrow.y - 15, arrow.x + 15, arrow.y, arrow.x - 15, arrow.y + 15);
-            image(img12, arrow.x - 16, arrow.y - 16, 32, 32);
-        }
-        
-        pop();
-        console.log(camera.x + ", " + camera.y);
+        // console.log(camera.x + ", " + camera.y);
 
         if (camera.x2 < -(width/2 * 4)) {
             camera.x2 = -(width/2 * 4);
@@ -357,7 +327,7 @@ function drawPlayer() {
             heart.x2 = randomGen(-1600, 1600 + width/2);
             heart.y2 = randomGen(-1200, 1200 + height/2);
 
-            console.log(heart.x2 + ", " + heart.y2);
+            // console.log(heart.x2 + ", " + heart.y2);
 
             // if (heart.x > 780) {
             //     heart.x = 760;
@@ -382,6 +352,70 @@ function drawPlayer() {
         $('.letter').show();
         sound1.play();
     }
+
+    if (hearts > 0) {
+      push();
+        fill(255, 255, 255);
+        stroke(0, 0, 0);
+        strokeWeight(3);
+        rect(30, height - 150, width - 60, 120);
+        pop();
+
+        push();
+        textSize(35);
+        fill(0, 0, 0, 255);
+        textFont(font1);
+        textLeading(28);
+        if (hearts == 1) {
+            text("What's this? Let's find more.", 50, height - 110, width - 100);
+        }
+        else if (hearts == 2) {
+            text("WE'RE MAKING PROGRESS. Is there more? Find it...", 50, height - 110, width - 100);
+        }
+        else if (hearts == 3) {
+            text("GET ME MORE. DO IT NOW!!", 50, height - 110, width - 100);
+        }
+        else if (hearts == 4) {
+            text("THIS IS THE ONLY SOLUTION!! DON'T STOP NOW! GET ME MOREEE", 50, height - 110, width - 100);
+        }
+        else if (hearts == 5) {
+            text("GET ME THE LAST PIECE OF THE PUZZLE. NOTHING ELSE MATTERS.", 50, height - 110, width - 100);
+        }
+        pop();  
+    }
+    
+
+    // ARROW
+    push();
+    fill(220, 0, 40);
+    noStroke();
+    arrow.x = heart.x;
+    arrow.y = heart.y;
+    if (heart.x > width - 30) {
+        arrow.x = width - 30;
+    }
+
+    if (heart.x < 0 + 30) {
+        arrow.x = 0 + 30;
+    }
+
+    if (heart.y > height - 30) {
+        arrow.y = height - 30;
+    }
+
+    if (heart.y < 0 + 30) {
+        arrow.y = 0 + 30;
+    }
+    
+    angleMode(DEGREES);
+    translate(arrow.x, arrow.y);
+    rotate((atan2(heart.y - arrow.y, heart.x - arrow.x)))
+    translate(-arrow.x, -arrow.y);
+    if (heart.x > width + 30 || heart.x < 0 - 30 || heart.y > height + 30 || heart.y < 0 - 30) {
+        // triangle(arrow.x - 15, arrow.y - 15, arrow.x + 15, arrow.y, arrow.x - 15, arrow.y + 15);
+        image(img12, arrow.x - 16, arrow.y - 16, 32, 32);
+    }
+    pop();
 }
 
 // Overlap check
@@ -392,3 +426,8 @@ function checkOverlap() {
 $('.close').on('click', function() {
     $('.letter').hide();
 })
+
+setTimeout(function() {
+    $(".letter").html("<p>testing test test test</p>");
+    $(".letter").show();
+}, 3000)
