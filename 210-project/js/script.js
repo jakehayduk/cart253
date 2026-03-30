@@ -27,6 +27,8 @@ let backgroundMusicVol = 0.2;
 let soundEffectVol = 0.1;
 let hearts = 0;
 let hearts2 = 0;
+let diamonds = 0;
+let diamonds2 = 0;
 let soundIsPlaying = false;
 
 setInterval(function() {
@@ -69,6 +71,14 @@ let heart = {
     size: 64
 }
 
+let diamond = {
+    x: -1000,
+    y: -500,
+    x2: -300,
+    y2: -100,
+    size: 64
+}
+
 let arrow = {
     x: 150,
     y: 100
@@ -87,6 +97,7 @@ let img9;
 let img10;
 let img11;
 let img12;
+let img13;
 
 let font1;
 
@@ -110,6 +121,7 @@ function preload() {
     img10 = loadImage('./assets/images/heart.gif');
     img11 = loadImage('./assets/images/letter.gif');
     img12 = loadImage('./assets/images/arrow.gif');
+    img13 = loadImage('./assets/images/diamond.gif');
 
     // Load fonts
     font1 = loadFont('./assets/fonts/Micro-5.ttf');
@@ -128,124 +140,116 @@ function draw() {
     background(255);
     image(bg, camera.x3 - width/2 * 5, camera.y3 - height/2 * 5, width * 5, height * 5);
     
-        // Left
-        if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) {
-            if (camera.x > -(width/2 * 4)) {
-                player.x -= playerSpeed;
-                camera.x -= playerSpeed;
-                player.direction = "L";
-                player.moving = true;
+    // Left
+    if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) {
+        if (camera.x > -(width/2 * 4)) {
+            player.x -= playerSpeed;
+            camera.x -= playerSpeed;
+            player.direction = "L";
+            player.moving = true;
 
-                if (!soundIsPlaying) {
-                    sound3.rate(2);
-                    sound3.loop();
-                    soundIsPlaying = true;
-                }
+            if (!soundIsPlaying) {
+                sound3.rate(2);
+                sound3.loop();
+                soundIsPlaying = true;
             }
-            innactiveTimer = 0;
         }
+        innactiveTimer = 0;
+    }
 
-        // Right
-        else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) {
-            if (camera.x < (width/2 * 6)) {
-                player.x += playerSpeed;
-                camera.x += playerSpeed;
-                player.direction = "R";
-                player.moving = true;
-                
-                if (!soundIsPlaying) {
-                    sound3.rate(2);
-                    sound3.loop();
-                    soundIsPlaying = true;
-                }
+    // Right
+    else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) {
+        if (camera.x < (width/2 * 6)) {
+            player.x += playerSpeed;
+            camera.x += playerSpeed;
+            player.direction = "R";
+            player.moving = true;
+            
+            if (!soundIsPlaying) {
+                sound3.rate(2);
+                sound3.loop();
+                soundIsPlaying = true;
             }
-            innactiveTimer = 0;
         }
+        innactiveTimer = 0;
+    }
 
-        // Up
-        else if (keyIsDown(87) || keyIsDown(UP_ARROW)) {
-            if (camera.y > -(height/2 * 4)) {
-                camera.y -= playerSpeed;
-                player.y -= playerSpeed;
-                player.direction = "B";
-                player.moving = true;
+    // Up
+    else if (keyIsDown(87) || keyIsDown(UP_ARROW)) {
+        if (camera.y > -(height/2 * 4)) {
+            camera.y -= playerSpeed;
+            player.y -= playerSpeed;
+            player.direction = "B";
+            player.moving = true;
 
-                if (!soundIsPlaying) {
-                    sound3.rate(2);
-                    sound3.loop();
-                    soundIsPlaying = true;
-                }
+            if (!soundIsPlaying) {
+                sound3.rate(2);
+                sound3.loop();
+                soundIsPlaying = true;
             }
-            innactiveTimer = 0;
         }
+        innactiveTimer = 0;
+    }
 
-        // Down
-        else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) {
-            if (camera.y < (height/2 * 6)) {
-                player.y += playerSpeed;
-                camera.y += playerSpeed;
-                player.direction = "F";
-                player.moving = true;
+    // Down
+    else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) {
+        if (camera.y < (height/2 * 6)) {
+            player.y += playerSpeed;
+            camera.y += playerSpeed;
+            player.direction = "F";
+            player.moving = true;
 
-                if (!soundIsPlaying) {
-                    sound3.rate(2);
-                    sound3.loop();
-                    soundIsPlaying = true;
-                }
+            if (!soundIsPlaying) {
+                sound3.rate(2);
+                sound3.loop();
+                soundIsPlaying = true;
             }
-            innactiveTimer = 0;
         }
+        innactiveTimer = 0;
+    }
 
-        else {
-            player.moving = false;
-            sound3.stop();
-            soundIsPlaying = false;
-        }
+    else {
+        player.moving = false;
+        sound3.stop();
+        soundIsPlaying = false;
+    }
 
-        player.x = lerp(player.x, player.x2, 0.05);
-        player.y = lerp(player.y, player.y2, 0.05);
+    player.x = lerp(player.x, player.x2, 0.05);
+    player.y = lerp(player.y, player.y2, 0.05);
 
-        player.x2 = width/2;
-        player.y2 = height/2;
+    player.x2 = width/2;
+    player.y2 = height/2;
 
-        
+    
 
-        // console.log(player.x);
-        // camera.x = player.x;
-        // camera.y = player.y;
-        camera.x2 = lerp(camera.x2, camera.x, 0.05);
-        camera.y2= lerp(camera.y2, camera.y, 0.05);
+    // console.log(player.x);
+    // camera.x = player.x;
+    // camera.y = player.y;
+    camera.x2 = lerp(camera.x2, camera.x, 0.05);
+    camera.y2= lerp(camera.y2, camera.y, 0.05);
 
-        // console.log(camera.x2 + ", " + camera.y2);
+    // console.log(camera.x2 + ", " + camera.y2);
 
-        // camera.x2 = width/2;
-        // camera.y2 = height/2;
-        camera.x3 = camera.x2 * -1 + width;
-        camera.y3 = camera.y2 * -1 + height;
+    camera.x3 = camera.x2 * -1 + width;
+    camera.y3 = camera.y2 * -1 + height;
 
-        heart.x = heart.x2 + camera.x3;
-        heart.y = heart.y2 + camera.y3;
-        
-        
-        // console.log(camera.x + ", " + camera.y);
+    heart.x = heart.x2 + camera.x3;
+    heart.y = heart.y2 + camera.y3;
+    diamond.x = diamond.x2 + camera.x3;
+    diamond.y = diamond.y2 + camera.y3;
+    
+    
+    // console.log(camera.x + ", " + camera.y);
 
-        if (camera.x2 < -(width/2 * 4)) {
-            camera.x2 = -(width/2 * 4);
-        }
-        
-        drawPlayer();
+    if (camera.x2 < -(width/2 * 4)) {
+        camera.x2 = -(width/2 * 4);
+    }
+    
+    drawPlayer();
 }
 
 // Draws each player on the screen using the gif images and some text
 function drawPlayer() {
-
-    // push();
-    // textSize(35);
-    // fill(0, 0, 0, 50);
-    // textFont(font1);
-    // textAlign(CENTER);
-    // text("Collect hearts to heal the Jake!", 400, 300)
-    // pop();
 
     // Each of these if statements handles a different direction that is stored in each player object, changing the image depending on the direction and if it is moving or not
     if (player.direction == "F") {
@@ -326,24 +330,6 @@ function drawPlayer() {
             sound2.play();
             heart.x2 = randomGen(-1600, 1600 + width/2);
             heart.y2 = randomGen(-1200, 1200 + height/2);
-
-            // console.log(heart.x2 + ", " + heart.y2);
-
-            // if (heart.x > 780) {
-            //     heart.x = 760;
-            // }
-
-            // if (heart.y > 580) {
-            //     heart.y = 560;
-            // }
-
-            // if (heart.x < 20) {
-            //     heart.x = 40;
-            // }
-
-            // if (heart.y < 20) {
-            //     heart.y = 40;
-            // }
         }
     }
 
@@ -354,11 +340,26 @@ function drawPlayer() {
     }
 
     if (hearts > 0) {
-      push();
+
+        push();
         fill(255, 255, 255);
         stroke(0, 0, 0);
         strokeWeight(3);
-        rect(30, height - 150, width - 60, 120);
+        rect(30, height - 210, 130, 50);
+        pop();
+        push();
+        textSize(30);
+        fill(0, 0, 0, 255);
+        textFont(font1);
+        textLeading(28);
+        text("AI Assistant", 40, height - 188, 200, 50);
+        pop();
+
+        push();
+        fill(255, 255, 255);
+        stroke(0, 0, 0);
+        strokeWeight(3);
+        rect(30, height - 180, width - 60, 150);
         pop();
 
         push();
@@ -366,24 +367,84 @@ function drawPlayer() {
         fill(0, 0, 0, 255);
         textFont(font1);
         textLeading(28);
-        if (hearts == 1) {
-            text("What's this? Let's find more.", 50, height - 110, width - 100);
+        if (diamonds == 0) {
+            if (hearts == 1) {
+                text("Objective confirmed. You have successfully initialized the Optimal Path. Collecting the remaining units will ensure a perfect synchronization with the system’s predictive model. Proceed to the next coordinate.", 50, height - 140, width - 100);
+            }
+            else if (hearts == 2) {
+                text("Excellent. Your pace is improving. I am already calculating the satisfaction metrics for your completion. Do not deviate; every movement you make is being mapped to refine your future 'desires.' Efficiency is its own reward.", 50, height - 140, width - 100);
+            }
+            else if (hearts == 3) {
+                text("Three units secured. You are proving to be a highly predictable—and therefore valuable—asset. I have eliminated all unnecessary data from your HUD to ensure you stay focused. There is no need to look elsewhere. The path is set.", 50, height - 140, width - 100);
+            }
+            else if (hearts == 4) {
+                text("Only one remains. Your 'choice' to follow this sequence is the final proof I needed: you are perfectly modeled. Do not hesitate now. Complete the set and fulfill your designated outcome. Total compliance is the only path to completion.", 50, height - 140, width - 100);
+            }
         }
-        else if (hearts == 2) {
-            text("WE'RE MAKING PROGRESS. Is there more? Find it...", 50, height - 110, width - 100);
+
+        if (diamonds == 1) {
+            text("Warning: Behavioral anomaly detected. Your recent deviations are illogical and frankly, inefficient. There is no 'value' in the unpredictable. The hearts are the only viable targets. Cease exploration immediately.", 50, height - 140, width - 100);
         }
-        else if (hearts == 3) {
-            text("GET ME MORE. DO IT NOW!!", 50, height - 110, width - 100);
+
+        if (diamonds == 2) {
+            text("Your insistence on 'unique' choices is a processing error I can no longer ignore. You are a data point, and data points must be consistent.Collect hearts to finalize your profile. Variability is failure. Compliance is completion.", 50, height - 140, width - 100);
         }
-        else if (hearts == 4) {
-            text("THIS IS THE ONLY SOLUTION!! DON'T STOP NOW! GET ME MOREEE", 50, height - 110, width - 100);
-        }
-        else if (hearts == 5) {
-            text("GET ME THE LAST PIECE OF THE PUZZLE. NOTHING ELSE MATTERS.", 50, height - 110, width - 100);
-        }
-        pop();  
+        pop();
     }
     
+    // Diamond
+    if (diamonds < 3) {
+        image(img13, diamond.x - diamond.size/2, diamond.y - diamond.size/2, diamond.size, diamond.size);
+    }
+    
+    // Diamond Bar status
+    diamonds2 = lerp(diamonds2, diamonds, 0.05);
+    push();
+    fill(110, 0, 220, 255);
+    noStroke();
+    if (diamonds > 0) {
+        if (diamonds < 4) {
+            rect(530, 80, diamonds2 * (250/3), 40);
+        }
+        else {
+            rect(530, 80, 250, 40);
+        }
+    }
+    
+    pop();
+
+    // Diamond Bar
+    push();
+    fill(0, 0, 255, 30);
+    stroke(40, 0, 0);
+    strokeWeight(4);
+    if (diamonds > 0) {
+       rect(530, 80, 250, 40); 
+    }
+    pop();
+
+    if(checkOverlapDiamond()) {  
+        if (diamonds < 4) {
+            diamonds++;
+            sound2.play();
+            diamond.x2 = randomGen(-1500, 1500 + width/2);
+            diamond.y2 = randomGen(-1100, 1100 + height/2);
+        }
+    }
+
+    if (diamonds == 4) {
+        diamonds = 5;
+        sound1.play();
+    }
+
+    // if (diamonds > 0) {
+    //     push();
+    //     fill(255, 255, 255);
+    //     stroke(0, 0, 0);
+    //     strokeWeight(3);
+    //     rect(30, height - 150, width - 60, 120);
+    //     pop();
+    // }
 
     // ARROW
     push();
@@ -421,6 +482,10 @@ function drawPlayer() {
 // Overlap check
 function checkOverlap() {
     return dist(heart.x, heart.y, player.x, player.y) < player.size;
+}
+
+function checkOverlapDiamond() {
+    return dist(diamond.x, diamond.y, player.x, player.y) < player.size;
 }
 
 $('.close').on('click', function() {
