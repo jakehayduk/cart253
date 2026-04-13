@@ -294,6 +294,11 @@ function drawPlayer() {
         image(hat[player.hat], player.x - player.size/2, player.y - player.size, player.size, player.size * 1.5);
     }
 
+    // Diamond
+    if (diamonds < 3) {
+        image(img13, diamond.x - diamond.size/2, diamond.y - diamond.size/2, diamond.size, diamond.size);
+    }
+
     // HEART
     if (hearts < 5) {
         image(img10, heart.x - heart.size/2, heart.y - heart.size/2, heart.size, heart.size);
@@ -390,11 +395,6 @@ function drawPlayer() {
             text("Your insistence on 'unique' choices is a processing error I can no longer ignore. You are a data point, and data points must be consistent.Collect hearts to finalize your profile. Variability is failure. Compliance is completion.", 50, height - 140, width - 100);
         }
         pop();
-    }
-    
-    // Diamond
-    if (diamonds < 3) {
-        image(img13, diamond.x - diamond.size/2, diamond.y - diamond.size/2, diamond.size, diamond.size);
     }
     
     // Diamond Bar status
