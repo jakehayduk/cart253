@@ -300,12 +300,12 @@ function drawPlayer() {
     }
 
     // HEART
-    if (hearts < 5) {
+    if (hearts < 6) {
         image(img10, heart.x - heart.size/2, heart.y - heart.size/2, heart.size, heart.size);
     }
-    else if (hearts >= 5 && hearts < 6){
-        image(img11, heart.x - heart.size/2, heart.y - heart.size/2, heart.size, heart.size);
-    }
+    // else if (hearts >= 5 && hearts < 6){
+    //     image(img11, heart.x - heart.size/2, heart.y - heart.size/2, heart.size, heart.size);
+    // }
 
     // Health Bar status
     hearts2 = lerp(hearts2, hearts, 0.05);
@@ -338,11 +338,11 @@ function drawPlayer() {
         }
     }
 
-    if (hearts == 6) {
-        hearts = 7;
-        $('.letter').show();
-        sound1.play();
-    }
+    // if (hearts == 6) {
+    //     hearts = 7;
+    //     $('.letter').show();
+    //     sound1.play();
+    // }
 
     if (hearts > 0) {
 
@@ -488,11 +488,11 @@ function checkOverlapDiamond() {
     return dist(diamond.x, diamond.y, player.x, player.y) < player.size;
 }
 
-$('.close').on('click', function() {
-    $('.letter').hide();
-})
+// $('.close').on('click', function() {
+//     $('.letter').hide();
+// })
 
-setTimeout(function() {
-    $(".letter").html("<p>testing test test test</p>");
-    $(".letter").show();
-}, 3000)
+// setTimeout(function() {
+//     $(".letter").html("<p>testing test test test</p>");
+//     $(".letter").show();
+// }, 3000)
