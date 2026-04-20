@@ -30,6 +30,7 @@ let hearts2 = 0;
 let diamonds = 0;
 let diamonds2 = 0;
 let soundIsPlaying = false;
+let showEndScreen = false;
 
 setInterval(function() {
     innactiveTimer++;
@@ -74,8 +75,8 @@ let heart = {
 let diamond = {
     x: -1000,
     y: -500,
-    x2: -400,
-    y2: -200,
+    x2: -800,
+    y2: -600,
     size: 64
 }
 
@@ -139,7 +140,7 @@ function preload() {
 function draw() {
     background(255);
     image(bg, camera.x3 - width/2 * 5, camera.y3 - height/2 * 5, width * 5, height * 5);
-    
+        
     // Left
     if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) {
         if (camera.x > -(width/2 * 4)) {
@@ -432,9 +433,31 @@ function drawPlayer() {
         }
     }
 
-    if (diamonds == 4) {
-        diamonds = 5;
-        sound1.play();
+    if (hearts == 5) {
+        hearts = 6;
+        showEndScreen = true;
+        $(".container").css("background-color", "rgb(231, 41, 67)");
+        $(".container").html("<h1>YOU LOSE</h1><p>Your mind has been scraped by AI.</p><button>Restart</button>")
+    }
+
+    if (diamonds == 3) {
+        diamonds = 4;
+        showEndScreen = true;
+        $(".container").css("background-color", "rgb(177, 220, 34)");
+        $(".container").html("<h1>YOU WIN</h1><p>You followed the creative glitches.</p><button>Restart</button>")
+    }
+
+    if (diamonds == 1) {
+        playerSpeed = 7;
+    }
+
+    if (diamonds == 2) {
+        playerSpeed = 10;
+    }
+
+    if (showEndScreen) {
+        showEndScreen = false;
+        $(".container").css("display", "flex");
     }
 
     // if (diamonds > 0) {
@@ -487,6 +510,11 @@ function checkOverlap() {
 function checkOverlapDiamond() {
     return dist(diamond.x, diamond.y, player.x, player.y) < player.size;
 }
+
+$(document).on("click", "button", function() {
+    console.log("reload");
+    location.reload();
+})
 
 // $('.close').on('click', function() {
 //     $('.letter').hide();
